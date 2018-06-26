@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/AGrzes/command-center/issues"
   },
-  "homepage": "https://github.com/AGrzes/command-center#readme"
+  "homepage": "https://github.com/AGrzes/command-center#readme",
+  "dependencies": {
+    "express": "^4.16.3"
+  }
 }
