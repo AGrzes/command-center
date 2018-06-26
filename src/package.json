@@ -1,0 +1,19 @@
+{
+  "name": "command-center",
+  "version": "0.0.1",
+  "description": "Personal command center site",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/AGrzes/command-center.git"
+  },
+  "author": "Grzegorz Abramczyk <abramczykg@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/AGrzes/command-center/issues"
+  },
+  "homepage": "https://github.com/AGrzes/command-center#readme"
+}
