@@ -3,6 +3,7 @@ const webpack = require('webpack');
 
 module.exports = {
   entry: './src/main.js',
+  mode: 'development',
   output: {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'generated')
@@ -30,16 +31,16 @@ module.exports = {
     poll: true
   },
   plugins: [
-      new webpack.ProvidePlugin({
-        $: 'jquery',
-        jQuery: 'jquery',
-        'window.jQuery': 'jquery',
-        Popper: ['popper.js', 'default']
-      })
+    new webpack.ProvidePlugin({
+      $: 'jquery',
+      jQuery: 'jquery',
+      'window.jQuery': 'jquery',
+      Popper: ['popper.js', 'default']
+    })
   ],
   resolve: {
     alias: {
-       'vue$': 'vue/dist/vue.esm.js' 
+      'vue$': 'vue/dist/vue.esm.js'
     }
   }
 };
