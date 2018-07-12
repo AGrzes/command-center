@@ -19,7 +19,9 @@
   },
   "homepage": "https://github.com/AGrzes/command-center#readme",
   "dependencies": {
-    "express": "^4.16.3"
+    "express": "^4.16.3",
+    "vue": "^2.5.16",
+    "vue-router": "^3.0.1"
   },
   "devDependencies": {
     "css-loader": "^1.0.0",
