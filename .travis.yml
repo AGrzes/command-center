@@ -16,6 +16,7 @@ jobs:
       after_success: npm run coverage
     - stage: build
       sudo: required
+      language: generic
       script: docker build .  
       services:
         - docker  
