@@ -1,0 +1,7 @@
+sudo: false
+language: node_js
+node_js:
+- 10
+git:
+  submodules: false
+after_success: npm run coverage
