@@ -1,12 +1,3 @@
-sudo: required
-language: node_js
-node_js:
-- 10
-git:
-  submodules: false
-after_success: npm run coverage
-services:
-  - docker
 jobs:
   include:
     - stage: test
@@ -16,5 +7,15 @@ jobs:
       script:
         - cd src
         - npm test  
+      sudo: false
+      language: node_js
+      node_js:
+      - 10
+      git:
+        submodules: false
+      after_success: npm run coverage
     - stage: build
-      script: socker build .    
+      sudo: required
+      script: docker build .  
+      services:
+        - docker  
