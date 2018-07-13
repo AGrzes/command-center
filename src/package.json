@@ -6,7 +6,9 @@
   "scripts": {
     "start": "node index.js",
     "build": "webpack",
-    "watch": "webpack -d"
+    "watch": "webpack -d",
+    "test": "nyc --reporter=html --reporter=text mocha --recursive",
+    "coverage": "nyc report --reporter=text-lcov | coveralls"
   },
   "repository": {
     "type": "git",
