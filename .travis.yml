@@ -4,6 +4,9 @@ node_js:
 - 10
 git:
   submodules: false
+install:
+  - cd src
+  - npm install  
 script:
   - cd src
   - npm test  
