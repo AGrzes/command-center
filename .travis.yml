@@ -4,10 +4,13 @@ node_js:
 - 10
 git:
   submodules: false
-install:
-  - cd src
-  - npm install  
-script:
-  - cd src
-  - npm test  
 after_success: npm run coverage
+jobs:
+  include:
+    - stage: test
+      install:
+        - cd src
+        - npm install  
+      script:
+        - cd src
+        - npm test  
