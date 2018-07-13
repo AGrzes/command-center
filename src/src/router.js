@@ -5,8 +5,10 @@ const routes = [{
   name: 'main',
   path: '/',
   component: {
-    template: `<div>
-      Hello router
+    template: `<div class="row">
+      <div class="col-3">
+        Hello router
+      </div>
     </div>`
   }
 }]
