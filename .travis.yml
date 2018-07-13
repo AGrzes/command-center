@@ -1,0 +1,22 @@
+jobs:
+  include:
+    - stage: test
+      install:
+        - cd src
+        - npm install  
+      script:
+        - cd src
+        - npm test  
+      sudo: false
+      language: node_js
+      node_js:
+      - 10
+      git:
+        submodules: false
+      after_success: npm run coverage
+    - stage: build
+      sudo: required
+      language: generic
+      script: docker build .  
+      services:
+        - docker  
