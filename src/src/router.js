@@ -1,13 +1,14 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import goals from './route/goals'
+import reminders from './route/reminders'
 Vue.use(VueRouter)
 const routes = [{
   name: 'main',
   path: '/',
   component: {
     template: `<div>
-      <div class="row">
+      <div class="row mt-1">
         <div class="col-12">
           <nav class="navbar navbar-light bg-light navbar-expand-lg">
             <a class="navbar-brand" href="#">Command Center</a>
@@ -16,17 +17,19 @@ const routes = [{
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
               <ul class="navbar-nav">
-                <router-link tag="li" class="nav-item" :to="{name:'goals'}">Goals</router-link>
+                <router-link tag="li" class="nav-item" :to="{name:'goals'}"><a class="nav-link">Goals</a></router-link>
+                <router-link tag="li" class="nav-item" :to="{name:'reminders'}"><a class="nav-link">Reminders</a></router-link>
               </ul>
             </div>
           </nav>
         </div>
       </div>
-      <router-view></router-view>
+      <router-view class="mt-1"></router-view>
     </div>`
   },
   children: [
-    ...goals
+    ...goals,
+    ...reminders
   ]
 }]
 
