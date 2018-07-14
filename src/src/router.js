@@ -8,7 +8,7 @@ const routes = [{
   path: '/',
   component: {
     template: `<div>
-      <div class="row">
+      <div class="row mt-1">
         <div class="col-12">
           <nav class="navbar navbar-light bg-light navbar-expand-lg">
             <a class="navbar-brand" href="#">Command Center</a>
@@ -24,7 +24,7 @@ const routes = [{
           </nav>
         </div>
       </div>
-      <router-view></router-view>
+      <router-view class="mt-1"></router-view>
     </div>`
   },
   children: [
