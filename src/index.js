@@ -4,6 +4,7 @@ const path = require('path')
 const app = express()
 
 app.use('/api/goals', require('./goals'))
+app.use('/api/reminders', require('./reminders'))
 app.use(history())
 app.use(express.static(path.join(__dirname, 'www')))
 app.use(express.static(path.join(__dirname, 'generated')))
