@@ -17,8 +17,8 @@ const routes = [{
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
               <ul class="navbar-nav">
-                <router-link tag="li" class="nav-item" :to="{name:'goals'}">Goals</router-link>
-                <router-link tag="li" class="nav-item" :to="{name:'reminders'}">Reminders</router-link>
+                <router-link tag="li" class="nav-item" :to="{name:'goals'}"><a class="nav-link">Goals</a></router-link>
+                <router-link tag="li" class="nav-item" :to="{name:'reminders'}"><a class="nav-link">Reminders</a></router-link>
               </ul>
             </div>
           </nav>
