@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import goals from './route/goals'
 Vue.use(VueRouter)
 const routes = [{
   name: 'main',
@@ -24,13 +25,9 @@ const routes = [{
       <router-view></router-view>
     </div>`
   },
-  children: [{
-    name: 'goals',
-    path: 'goals',
-    component: {
-      template: '<p>Goals</p>'
-    }
-  }]
+  children: [
+    ...goals
+  ]
 }]
 
 const router = new VueRouter({
