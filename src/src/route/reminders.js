@@ -9,7 +9,7 @@ export default [{
   path: 'reminders',
   component: {
     template: `<div class="row">
-      <div class="col-4 col-md-12" v-for="reminder in reminders">
+      <div class="col-12 col-lg-4 mt-1" v-for="reminder in reminders">
         <div class="card">
           <div class="card-body">
             <h5 class="card-title">{{reminder.name}}</h5>
