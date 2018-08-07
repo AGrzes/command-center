@@ -34,6 +34,17 @@ Vue.component('goal-measurement', {
   }
 })
 
+Vue.component('goal-history', {
+  props: ['history'],
+  template: `
+  <ul>
+    <li v-for="event in history">
+    {{event.date}} - {{event.event}}
+    </li>
+  </ul>
+  `
+})
+
 export default [{
   name: 'goals',
   path: 'goals',
@@ -53,8 +64,10 @@ export default [{
                 <goal-measurement :measurement="goal.measurement" class="w-25 mr-4"></goal-measurement>
                 <goal-result :result="goal.result"></goal-result>
               </div>
-              <goal-description :description="goal.description"></goal-description>
-              
+              <div class="row">
+                <goal-description :description="goal.description" class="col-12 col-md-8"></goal-description>
+                <goal-history :history="goal.history" class="col-12 col-md-4"></goal-history>
+              </div>
             </li>
           </ul>
         </div>
