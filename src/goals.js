@@ -8,4 +8,9 @@ router.get('/',(req,res,next)=>{
   .catch((err)=>res.status(500).send(err))
 })
 
+router.get('/:id',(req,res,next)=>{
+  goalsDB.get(req.params.id)
+  .then(goal=>res.send(goal))
+  .catch((err)=>res.status(500).send(err))
+})
 module.exports = router
