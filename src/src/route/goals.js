@@ -45,6 +45,11 @@ Vue.component('goal-history', {
   `
 })
 
+Vue.component('goal-tags', {
+  props: ['tags'],
+  template: '<span><span class="badge badge-primary badge-pill mr-1" v-for="tag in tags">{{tag}}</span></span>'
+})
+
 export default [{
   name: 'goals',
   path: 'goals',
@@ -60,8 +65,9 @@ export default [{
           <ul class="list-group">
             <li class="list-group-item" v-for="goal in goals">
               <div class="d-flex w-100 justify-content-between align-items-center">
-                <h5 class="mb-1 mr-auto">{{goal.name}}</h5>
-                <goal-measurement :measurement="goal.measurement" class="w-25 mr-4"></goal-measurement>
+                <h5 class="mb-1 mr-1">{{goal.name}}</h5>
+                <goal-tags :tags="goal.tags"></goal-tags>
+                <goal-measurement :measurement="goal.measurement" class="ml-auto w-25 mr-4"></goal-measurement>
                 <goal-result :result="goal.result"></goal-result>
               </div>
               <div class="row">
