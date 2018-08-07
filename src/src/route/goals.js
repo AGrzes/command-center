@@ -60,6 +60,29 @@ Vue.component('goal-tags', {
   template: '<span><span class="badge badge-primary badge-pill mr-1" v-for="tag in tags">{{tag}}</span></span>'
 })
 
+Vue.component('goal-item', {
+  props: ['goal'],
+  data: ()=> ({
+    expanded:false
+  }),
+  template: `
+  <div>
+    <div class="d-flex w-100 justify-content-between align-items-center">
+      <h5 class="mb-1 mr-1">{{goal.name}}</h5>
+      <goal-tags :tags="goal.tags"></goal-tags>
+      <goal-measurement :measurement="goal.measurement" class="ml-auto w-25 mr-4"></goal-measurement>
+      <goal-result :result="goal.result" class="mr-1"></goal-result>
+      <a @click="expanded=!expanded" class="btn btn-primary btn-sm w-10">{{expanded?'V':'>'}}</a>
+    </div>
+    <div class="row" v-if="expanded">
+      <goal-description :description="goal.description" class="col-12 col-md-6"></goal-description>
+      <goal-links :links="goal.links" class="col-12 col-md-3"></goal-links>
+      <goal-history :history="goal.history" class="col-12 col-md-3"></goal-history>
+    </div>
+  </div>
+  `
+})
+
 export default [{
   name: 'goals',
   path: 'goals',
@@ -74,17 +97,7 @@ export default [{
         <div class="col-12">
           <ul class="list-group">
             <li class="list-group-item" v-for="goal in goals">
-              <div class="d-flex w-100 justify-content-between align-items-center">
-                <h5 class="mb-1 mr-1">{{goal.name}}</h5>
-                <goal-tags :tags="goal.tags"></goal-tags>
-                <goal-measurement :measurement="goal.measurement" class="ml-auto w-25 mr-4"></goal-measurement>
-                <goal-result :result="goal.result"></goal-result>
-              </div>
-              <div class="row">
-                <goal-description :description="goal.description" class="col-12 col-md-6"></goal-description>
-                <goal-links :links="goal.links" class="col-12 col-md-3"></goal-links>
-                <goal-history :history="goal.history" class="col-12 col-md-3"></goal-history>
-              </div>
+              <goal-item :goal="goal"></goal-item>
             </li>
           </ul>
         </div>
