@@ -1,8 +1,38 @@
 import axios from 'axios'
+import Vue from 'vue'
 
 function list() {
   return axios.get('/api/goals').then(response => response.data)
 }
+
+Vue.component('goal-description', {
+  props: ['description'],
+  template: '<p class="mb-1" v-if="description">{{ description }}</p>'
+})
+
+Vue.component('goal-result', {
+  props: ['result'],
+  template: '<small>{{result}}</small>'
+})
+
+Vue.component('goal-measurement', {
+  props: ['measurement'],
+  template: `
+  <div class="progress">
+    <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" :style="{width: progress+'%'}"></div>
+  </div>`,
+  computed: {
+
+    progress: function () {
+      switch (this.measurement.kind) {
+        case 'pass/fail':
+          return this.measurement.done ? 100 : 0
+        default:
+          return 0;
+      }
+    }
+  }
+})
 
 export default [{
   name: 'goals',
@@ -16,18 +46,17 @@ export default [{
     component: {
       template: `<div class="row">
         <div class="col-12">
-          <table class="table">
-            <tr>
-              <th>AOC</th>
-              <th>Project</th>
-              <th>Goals</th>
-            </tr>
-            <tr v-for="goal in goals">
-              <td>{{goal.aoc}} </td>
-              <td>{{goal.project.name}} </td>
-              <td>{{goal.target}} </td>
-            </tr>
-          </table>
+          <ul class="list-group">
+            <li class="list-group-item" v-for="goal in goals">
+              <div class="d-flex w-100 justify-content-between align-items-center">
+                <h5 class="mb-1 mr-auto">{{goal.name}}</h5>
+                <goal-measurement :measurement="goal.measurement" class="w-25 mr-4"></goal-measurement>
+                <goal-result :result="goal.result"></goal-result>
+              </div>
+              <goal-description :description="goal.description"></goal-description>
+              
+            </li>
+          </ul>
         </div>
       </div>
       `,
