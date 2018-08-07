@@ -4,6 +4,9 @@ import Vue from 'vue'
 function list() {
   return axios.get('/api/goals').then(response => response.data)
 }
+function item(id) {
+  return axios.get(`/api/goals/${id}`).then(response => response.data)
+}
 
 Vue.component('goal-description', {
   props: ['description'],
@@ -72,7 +75,8 @@ Vue.component('goal-item', {
       <goal-tags :tags="goal.tags"></goal-tags>
       <goal-measurement :measurement="goal.measurement" class="ml-auto w-25 mr-4"></goal-measurement>
       <goal-result :result="goal.result" class="mr-1"></goal-result>
-      <a @click="expanded=!expanded" class="btn btn-primary btn-sm w-10">{{expanded?'V':'>'}}</a>
+      <a @click="expanded=!expanded" class="btn btn-primary btn-sm mr-1">{{expanded?'V':'>'}}</a>
+      <router-link tag="a" class="btn btn-primary btn-sm" :to="{name:'goals.details',params: { id: goal._id }}">+</router-link>
     </div>
     <div class="row" v-if="expanded">
       <goal-description :description="goal.description" class="col-12 col-md-6"></goal-description>
@@ -80,6 +84,26 @@ Vue.component('goal-item', {
       <goal-history :history="goal.history" class="col-12 col-md-3"></goal-history>
     </div>
   </div>
+  `
+})
+
+Vue.component('goal-details', {
+  props: ['goal'],
+  template: `
+  <form>
+    <div class="form-group row">
+      <label for="name" class="col-sm-2 col-form-label">Name</label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control" id="name" v-model="goal.name">
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="description" class="col-sm-2 col-form-label">Description</label>
+      <div class="col-sm-10">
+        <textarea type="text" class="form-control" id="description" v-model="goal.description"></textarea>
+      </div>
+    </div>
+  </form>
   `
 })
 
@@ -115,6 +139,31 @@ export default [{
       },
       data: () => ({
         goals: []
+      })
+    }
+  },{
+    name: 'goals.details',
+    path: ':id',
+    props: true,
+    component: {
+      props: ['id'],
+      template: `
+        <goal-details v-if="goal" :goal="goal"></goal-details>
+      `,
+      beforeRouteEnter(to, from, next) {
+        next(vm => {
+          item(vm.id).then(goal => {
+            vm.goal = goal
+          })
+        })
+      },
+      beforeRouteUpdate(to, from, next) {
+        item(this.id).then(goal => {
+          this.goal = goal
+        })
+      },
+      data: () => ({
+        goal: null
       })
     },
   }]
