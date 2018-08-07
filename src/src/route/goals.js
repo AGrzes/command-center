@@ -44,6 +44,16 @@ Vue.component('goal-history', {
   </ul>
   `
 })
+Vue.component('goal-links', {
+  props: ['links'],
+  template: `
+  <ul class="list-unstyled">
+    <li v-for="link in links">
+    {{link.kind}}: <a :href="link.target">{{link.label}}</a>
+    </li>
+  </ul>
+  `
+})
 
 Vue.component('goal-tags', {
   props: ['tags'],
@@ -71,8 +81,9 @@ export default [{
                 <goal-result :result="goal.result"></goal-result>
               </div>
               <div class="row">
-                <goal-description :description="goal.description" class="col-12 col-md-8"></goal-description>
-                <goal-history :history="goal.history" class="col-12 col-md-4"></goal-history>
+                <goal-description :description="goal.description" class="col-12 col-md-6"></goal-description>
+                <goal-links :links="goal.links" class="col-12 col-md-3"></goal-links>
+                <goal-history :history="goal.history" class="col-12 col-md-3"></goal-history>
               </div>
             </li>
           </ul>
