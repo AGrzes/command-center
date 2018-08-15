@@ -4,6 +4,7 @@ import Vue from 'vue'
 function list() {
   return axios.get('/api/goals').then(response => response.data)
 }
+
 function item(id) {
   return axios.get(`/api/goals/${id}`).then(response => response.data)
 }
@@ -22,14 +23,32 @@ Vue.component('goal-measurement', {
   props: ['measurement'],
   template: `
   <div class="progress">
-    <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" :style="{width: progress+'%'}"></div>
+    <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" :style="{width: progress+'%'}">{{label}}</div>
   </div>`,
   computed: {
 
-    progress: function () {
+    progress() {
       switch (this.measurement.kind) {
         case 'pass/fail':
           return this.measurement.done ? 100 : 0
+        case 'number':
+        case 'amount':
+          const current = this.measurement.progress || 0
+          const max = this.measurement.target
+          return (current / max) * 100
+        default:
+          return 0;
+      }
+    },
+    label() {
+      switch (this.measurement.kind) {
+        case 'pass/fail':
+          return this.measurement.done ? 'pass' : ''
+        case 'number':
+        case 'amount':
+          const current = this.measurement.progress || 0
+          const max = this.measurement.target
+          return `${current} / ${max}`
         default:
           return 0;
       }
@@ -65,8 +84,8 @@ Vue.component('goal-tags', {
 
 Vue.component('goal-item', {
   props: ['goal'],
-  data: ()=> ({
-    expanded:false
+  data: () => ({
+    expanded: false
   }),
   template: `
   <div>
@@ -141,7 +160,7 @@ export default [{
         goals: []
       })
     }
-  },{
+  }, {
     name: 'goals.details',
     path: ':id',
     props: true,
