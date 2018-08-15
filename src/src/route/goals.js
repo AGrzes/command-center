@@ -1,5 +1,6 @@
 import axios from 'axios'
 import Vue from 'vue'
+import moment from 'moment'
 
 function list() {
   return axios.get('/api/goals').then(response => response.data)
@@ -7,6 +8,10 @@ function list() {
 
 function item(id) {
   return axios.get(`/api/goals/${id}`).then(response => response.data)
+}
+
+function save(goal) {
+  return axios.put(`/api/goals/${goal._id}`, goal).then(response => response.data)
 }
 
 Vue.component('goal-description', {
@@ -115,7 +120,15 @@ Vue.component('goal-pass', {
     showModal() {
       $(this.$refs.modal).modal()
     },
-    pass(){
+    pass() {
+      this.goal.history.push({
+        event: 'close',
+        date: moment().toISOString(),
+        comment: this.comment
+      })
+      this.goal.measurement.done = moment().toISOString()
+      this.goal.result = 'success'
+      save(this.goal)
       $(this.$refs.modal).modal('hide')
     }
   },
@@ -139,7 +152,7 @@ Vue.component('goal-item', {
       <goal-measurement :measurement="goal.measurement" class="ml-auto w-25 mr-4"></goal-measurement>
       <goal-result :result="goal.result" class="mr-1"></goal-result>
       <a @click="expanded=!expanded" class="btn btn-primary btn-sm mr-1">{{expanded?'V':'>'}}</a>
-      <goal-pass goal="goal" class="mr-1"></goal-pass>
+      <goal-pass :goal="goal" class="mr-1"></goal-pass>
       <router-link tag="a" class="btn btn-primary btn-sm mr-1" :to="{name:'goals.details',params: { id: goal._id }}">+</router-link>
     </div>
     <div class="row" v-if="expanded">
