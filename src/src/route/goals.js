@@ -1,6 +1,7 @@
 import axios from 'axios'
 import Vue from 'vue'
 import moment from 'moment'
+import _ from 'lodash'
 
 function list() {
   return axios.get('/api/goals').then(response => response.data)
@@ -371,6 +372,14 @@ export default [{
           <div class="card">
             <div class="card-body">
               <goals-archive :goals="goals"></goals-archive>
+              <div class="form-check form-check-inline" v-for="tag in tags">
+                <input class="form-check-input" type="checkbox" :id="'tag-'+tag" :value="tag" v-model="selectedTags">
+                <label class="form-check-label" :for="'tag-'+tag">{{tag}}</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" id="showArchived" v-model="showArchived">
+                <label class="form-check-label" for="showArchived">Show archived</label>
+              </div>
             </div>
           </div>
         </div>
@@ -385,17 +394,29 @@ export default [{
       `,
       beforeRouteEnter(to, from, next) {
         list().then(goals => next(vm => {
-          vm.goals = goals
+          vm.rawGoals = goals
         }))
       },
       beforeRouteUpdate(to, from, next) {
         list().then(goals => {
-          this.goals = goals
+          this.rawGoals = goals
         })
       },
       data: () => ({
-        goals: []
-      })
+        rawGoals: [],
+        selectedTags:[],
+        showArchived: false
+      }),
+      computed:{
+        tags(){
+          return _.uniq(_.flatMap(this.rawGoals,'tags'))
+        },
+        goals(){
+          return _.filter(this.rawGoals,(goal)=>(
+            _.isEmpty(this.selectedTags)||!_.isEmpty(_.intersection(goal.tags,this.selectedTags)))&& 
+            (this.showArchived?true:!goal.archive))
+        }
+      }
     }
   }, {
     name: 'goals.details',
