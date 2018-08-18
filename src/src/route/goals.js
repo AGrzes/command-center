@@ -372,7 +372,10 @@ export default [{
           <div class="card">
             <div class="card-body">
               <goals-archive :goals="goals"></goals-archive>
-              <goal-tags :tags="tags"></goal-tags>
+              <div class="form-check form-check-inline" v-for="tag in tags">
+                <input class="form-check-input" type="checkbox" :id="'tag-'+tag" :value="tag" v-model="selectedTags">
+                <label class="form-check-label" :for="'tag-'+tag">{{tag}}</label>
+              </div>
             </div>
           </div>
         </div>
@@ -387,20 +390,24 @@ export default [{
       `,
       beforeRouteEnter(to, from, next) {
         list().then(goals => next(vm => {
-          vm.goals = goals
+          vm.rawGoals = goals
         }))
       },
       beforeRouteUpdate(to, from, next) {
         list().then(goals => {
-          this.goals = goals
+          this.rawGoals = goals
         })
       },
       data: () => ({
-        goals: []
+        rawGoals: [],
+        selectedTags:[]
       }),
       computed:{
         tags(){
-          return _.uniq(_.flatMap(this.goals,'tags'))
+          return _.uniq(_.flatMap(this.rawGoals,'tags'))
+        },
+        goals(){
+          return _.filter(this.rawGoals,(goal)=>(_.isEmpty(this.selectedTags)||!_.isEmpty(_.intersection(goal.tags,this.selectedTags))))
         }
       }
     }
