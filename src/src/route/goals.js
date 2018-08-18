@@ -179,7 +179,7 @@ Vue.component('goal-increment', {
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary" @click="pass()">Increment</button>
+              <button type="button" class="btn btn-primary" @click="doIncrement()">Increment</button>
             </div>
           </div>
         </div>
@@ -191,7 +191,7 @@ Vue.component('goal-increment', {
     showModal() {
       $(this.$refs.modal).modal()
     },
-    pass() {
+    doIncrement() {
       if (this.goal.measurement.target <= this.goal.measurement.progress + this.increment){
         this.goal.history.push({
           event: 'close',
@@ -229,6 +229,30 @@ Vue.component('goal-increment', {
   }
 })
 
+Vue.component('goal-archive', {
+  props: ['goal'],
+  template: `
+  <span>
+    <a class="btn btn-primary btn-sm" @click="doArchive()" v-if="active">Archive</a>
+  </span>`,
+  methods: {
+    doArchive() {
+      this.goal.history.push({
+        event: 'archive',
+        date: moment().toISOString()
+      })
+      this.goal.measurement.done = moment().toISOString()
+      this.goal.archive = true
+      save(this.goal)
+    }
+  },
+  computed: {
+    active() {
+      return (this.goal.result === 'success' || this.goal.result === 'failure') && !this.goal.archive
+    }
+  }
+})
+
 Vue.component('goal-item', {
   props: ['goal'],
   data: () => ({
@@ -244,6 +268,7 @@ Vue.component('goal-item', {
       <a @click="expanded=!expanded" class="btn btn-primary btn-sm mr-1">{{expanded?'V':'>'}}</a>
       <goal-pass :goal="goal" class="mr-1"></goal-pass>
       <goal-increment :goal="goal" class="mr-1"></goal-increment>
+      <goal-archive :goal="goal" class="mr-1"></goal-archive>
       <router-link tag="a" class="btn btn-primary btn-sm mr-1" :to="{name:'goals.details',params: { id: goal._id }}">+</router-link>
     </div>
     <div class="row" v-if="expanded">
@@ -275,6 +300,61 @@ Vue.component('goal-details', {
   `
 })
 
+Vue.component('goals-archive', {
+  props: ['goals'],
+  template: `
+  <span>
+    <portal to="modal">
+      <div class="modal" tabindex="-1" role="dialog" ref="modal">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Archive Goals</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="form-group">
+                <input type="date" class="form-control"  placeholder="Date" v-model="date">
+              </div>  
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary" @click="doArchive()">Archive</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </portal>
+    <a class="btn btn-primary btn-sm" @click="showModal()">Archive</a>
+  </span>`,
+  methods: {
+    showModal() {
+      $(this.$refs.modal).modal()
+    },
+    doArchive() {
+      this.goals.forEach((goal)=>{
+        if (!goal.archive && goal.measurement.done && moment(goal.measurement.done).isSameOrBefore(this.date,'day')){
+          goal.history.push({
+            event: 'archive',
+            date: moment().toISOString()
+          })
+          goal.measurement.done = moment().toISOString()
+          goal.archive = true
+          save(goal)
+        }
+      })
+      $(this.$refs.modal).modal('hide')
+    }
+  },
+  data() {
+    return {
+      date: moment().format('YYYY-MM-DD')
+    }
+  }
+})
+
 export default [{
   name: 'goals',
   path: 'goals',
@@ -285,8 +365,16 @@ export default [{
     name: 'goals.list',
     path: '',
     component: {
-      template: `<div class="row">
+      template: `
+      <div class="row">
         <div class="col-12">
+          <div class="card">
+            <div class="card-body">
+              <goals-archive :goals="goals"></goals-archive>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 mt-1">
           <ul class="list-group">
             <li class="list-group-item" v-for="goal in goals">
               <goal-item :goal="goal"></goal-item>
