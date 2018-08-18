@@ -1,6 +1,7 @@
 import axios from 'axios'
 import Vue from 'vue'
 import moment from 'moment'
+import _ from 'lodash'
 
 function list() {
   return axios.get('/api/goals').then(response => response.data)
@@ -371,6 +372,7 @@ export default [{
           <div class="card">
             <div class="card-body">
               <goals-archive :goals="goals"></goals-archive>
+              <goal-tags :tags="tags"></goal-tags>
             </div>
           </div>
         </div>
@@ -395,7 +397,12 @@ export default [{
       },
       data: () => ({
         goals: []
-      })
+      }),
+      computed:{
+        tags(){
+          return _.uniq(_.flatMap(this.goals,'tags'))
+        }
+      }
     }
   }, {
     name: 'goals.details',
