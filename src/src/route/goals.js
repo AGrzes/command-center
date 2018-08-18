@@ -179,7 +179,7 @@ Vue.component('goal-increment', {
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary" @click="pass()">Increment</button>
+              <button type="button" class="btn btn-primary" @click="doIncrement()">Increment</button>
             </div>
           </div>
         </div>
@@ -191,7 +191,7 @@ Vue.component('goal-increment', {
     showModal() {
       $(this.$refs.modal).modal()
     },
-    pass() {
+    doIncrement() {
       if (this.goal.measurement.target <= this.goal.measurement.progress + this.increment){
         this.goal.history.push({
           event: 'close',
@@ -229,6 +229,30 @@ Vue.component('goal-increment', {
   }
 })
 
+Vue.component('goal-archive', {
+  props: ['goal'],
+  template: `
+  <span>
+    <a class="btn btn-primary btn-sm" @click="doArchive()" v-if="active">Archive</a>
+  </span>`,
+  methods: {
+    doArchive() {
+      this.goal.history.push({
+        event: 'archive',
+        date: moment().toISOString()
+      })
+      this.goal.measurement.done = moment().toISOString()
+      this.goal.archive = true
+      save(this.goal)
+    }
+  },
+  computed: {
+    active() {
+      return (this.goal.result === 'success' || this.goal.result === 'failure') && !this.goal.archive
+    }
+  }
+})
+
 Vue.component('goal-item', {
   props: ['goal'],
   data: () => ({
@@ -244,6 +268,7 @@ Vue.component('goal-item', {
       <a @click="expanded=!expanded" class="btn btn-primary btn-sm mr-1">{{expanded?'V':'>'}}</a>
       <goal-pass :goal="goal" class="mr-1"></goal-pass>
       <goal-increment :goal="goal" class="mr-1"></goal-increment>
+      <goal-archive :goal="goal" class="mr-1"></goal-archive>
       <router-link tag="a" class="btn btn-primary btn-sm mr-1" :to="{name:'goals.details',params: { id: goal._id }}">+</router-link>
     </div>
     <div class="row" v-if="expanded">
