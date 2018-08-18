@@ -114,7 +114,7 @@ Vue.component('goal-pass', {
         </div>
       </div>
     </portal>
-    <a class="btn btn-primary btn-sm" @click="showModal()">Pass</a>
+    <a class="btn btn-primary btn-sm" @click="showModal()" v-if="active">Pass</a>
   </span>`,
   methods: {
     showModal() {
@@ -135,6 +135,11 @@ Vue.component('goal-pass', {
   data() {
     return {
       comment: null
+    }
+  },
+  computed: {
+    active() {
+      return this.goal.result === 'pending' && this.goal.measurement.kind === 'pass/fail'
     }
   }
 })
