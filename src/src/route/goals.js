@@ -157,7 +157,7 @@ Vue.component('goal-item', {
       <goal-measurement :measurement="goal.measurement" class="ml-auto w-25 mr-4"></goal-measurement>
       <goal-result :result="goal.result" class="mr-1"></goal-result>
       <a @click="expanded=!expanded" class="btn btn-primary btn-sm mr-1">{{expanded?'V':'>'}}</a>
-      <goal-pass :goal="goal" class="mr-1"></goal-pass>
+      <goal-pass :goal="goal" class="mr-1" v-if="goal.measurement.kind === 'pass/fail'"></goal-pass>
       <router-link tag="a" class="btn btn-primary btn-sm mr-1" :to="{name:'goals.details',params: { id: goal._id }}">+</router-link>
     </div>
     <div class="row" v-if="expanded">
