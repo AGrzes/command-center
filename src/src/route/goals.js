@@ -376,6 +376,10 @@ export default [{
                 <input class="form-check-input" type="checkbox" :id="'tag-'+tag" :value="tag" v-model="selectedTags">
                 <label class="form-check-label" :for="'tag-'+tag">{{tag}}</label>
               </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" id="showArchived" v-model="showArchived">
+                <label class="form-check-label" for="showArchived">Show archived</label>
+              </div>
             </div>
           </div>
         </div>
@@ -400,14 +404,17 @@ export default [{
       },
       data: () => ({
         rawGoals: [],
-        selectedTags:[]
+        selectedTags:[],
+        showArchived: false
       }),
       computed:{
         tags(){
           return _.uniq(_.flatMap(this.rawGoals,'tags'))
         },
         goals(){
-          return _.filter(this.rawGoals,(goal)=>(_.isEmpty(this.selectedTags)||!_.isEmpty(_.intersection(goal.tags,this.selectedTags))))
+          return _.filter(this.rawGoals,(goal)=>(
+            _.isEmpty(this.selectedTags)||!_.isEmpty(_.intersection(goal.tags,this.selectedTags)))&& 
+            (this.showArchived?true:!goal.archive))
         }
       }
     }
