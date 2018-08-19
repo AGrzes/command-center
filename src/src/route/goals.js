@@ -298,6 +298,16 @@ Vue.component('goal-details', {
       </div>
     </div>
     <div class="form-group row">
+      <label for="result" class="col-sm-2 col-form-label">Result</label>
+      <div class="col-sm-10">
+        <select class="form-control custom-select" id="result" v-model="goal.result">
+          <option>pending</option>
+          <option>success</option>
+          <option>failure</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group row">
       <label for="tags" class="col-sm-2 col-form-label">Tags</label>
       <div class="col-sm-10">
         <div class="input-group  mb-1" v-for="(tag,index) in goal.tags">
