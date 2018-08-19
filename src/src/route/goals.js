@@ -298,7 +298,7 @@ Vue.component('goal-details', {
       </div>
     </div>
     <div class="form-group row">
-      <label for="description" class="col-sm-2 col-form-label">Tags</label>
+      <label for="tags" class="col-sm-2 col-form-label">Tags</label>
       <div class="col-sm-10">
         <div class="input-group  mb-1" v-for="(tag,index) in goal.tags">
           <input type="text" class="form-control" id="name" v-model="goal.tags[index]">
@@ -310,6 +310,45 @@ Vue.component('goal-details', {
           <input type="text" class="form-control" id="name" v-model="newTag">
           <div class="input-group-append">
             <button type="button" class="btn btn-primary" @click="addTag()">+</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="tags" class="col-sm-2 col-form-label">Links</label>
+      <div class="col-sm-10">
+        <div class="form-row mb-1" v-for="link in goal.links">
+          <div class="col-12 col-md-3">
+            <select class="form-control custom-select" id="kind" v-model="link.kind">
+              <option>aoc</option>
+              <option>project</option>
+            </select> 
+          </div>
+          <div class="col-12 col-md-4">
+            <input type="url" class="form-control" id="target" v-model="link.target">
+          </div>
+          <div class="col-12 col-md-4">
+            <input type="text" class="form-control" id="label" v-model="link.label">
+          </div>
+          <div class="col-12 col-md-1">
+            <button type="button" class="btn btn-primary form-control" @click="removeLink(index)">-</button>
+          </div>
+        </div>
+        <div class="form-row mb-1">
+          <div class="col-12 col-md-3">
+            <select class="form-control custom-select" id="kind" v-model="newLink.kind">
+              <option>aoc</option>
+              <option>project</option>
+            </select> 
+          </div>
+          <div class="col-12 col-md-4">
+            <input type="url" class="form-control" id="target" v-model="newLink.target">
+          </div>
+          <div class="col-12 col-md-4">
+            <input type="text" class="form-control" id="label" v-model="newLink.label">
+          </div>
+          <div class="col-12 col-md-1">
+            <button type="button" class="btn btn-primary form-control" @click="addLink()">+</button>
           </div>
         </div>
       </div>
@@ -328,11 +367,20 @@ Vue.component('goal-details', {
     },
     removeTag(index){
       this.goal.tags.splice(index,1)
+    },
+    addLink(){
+      this.goal.links = this.goal.links || []
+      this.goal.links.push(this.newLink)
+      this.newLink = {}
+    },
+    removeLink(index){
+      this.goal.links.splice(index,1)
     }
   },
   data(){
     return {
-      newTag: null
+      newTag: null,
+      newLink: {}
     }
   }
 })
