@@ -297,12 +297,42 @@ Vue.component('goal-details', {
         <textarea type="text" class="form-control" id="description" v-model="goal.description"></textarea>
       </div>
     </div>
+    <div class="form-group row">
+      <label for="description" class="col-sm-2 col-form-label">Tags</label>
+      <div class="col-sm-10">
+        <div class="input-group  mb-1" v-for="(tag,index) in goal.tags">
+          <input type="text" class="form-control" id="name" v-model="goal.tags[index]">
+          <div class="input-group-append">
+            <button type="button" class="btn btn-primary" @click="removeTag(index)">-</button>
+          </div>
+        </div>
+        <div class="input-group">
+          <input type="text" class="form-control" id="name" v-model="newTag">
+          <div class="input-group-append">
+            <button type="button" class="btn btn-primary" @click="addTag()">+</button>
+          </div>
+        </div>
+      </div>
+    </div>
     <button type="button" class="btn btn-primary" @click="doSave()">Save</button>
   </form>
   `,
   methods: {
     doSave(){
       save(this.goal)
+    },
+    addTag(){
+      this.goal.tags = this.goal.tags || []
+      this.goal.tags.push(this.newTag)
+      this.newTag = null
+    },
+    removeTag(index){
+      this.goal.tags.splice(index,1)
+    }
+  },
+  data(){
+    return {
+      newTag: null
     }
   }
 })
