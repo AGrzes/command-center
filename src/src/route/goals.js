@@ -297,8 +297,14 @@ Vue.component('goal-details', {
         <textarea type="text" class="form-control" id="description" v-model="goal.description"></textarea>
       </div>
     </div>
+    <button type="button" class="btn btn-primary" @click="doSave()">Save</button>
   </form>
-  `
+  `,
+  methods: {
+    doSave(){
+      save(this.goal)
+    }
+  }
 })
 
 Vue.component('goals-archive', {
