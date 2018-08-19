@@ -323,6 +323,12 @@ Vue.component('goal-details', {
         <input type="number" class="form-control" id="measurement.target" v-model="goal.measurement.target">
       </div>
     </div>
+    <div class="form-group row" v-if="goal.measurement.kind === 'number' || goal.measurement.kind === 'amount'">
+      <label for="measurement.progress" class="col-sm-2 col-form-label">Measurement Progress</label>
+      <div class="col-sm-10">
+        <input type="number" class="form-control" id="measurement.progress" v-model="goal.measurement.progress">
+      </div>
+    </div>
     <div class="form-group row">
       <label for="measurement.due" class="col-sm-2 col-form-label">Measurement Due Date</label>
       <div class="col-sm-10">
