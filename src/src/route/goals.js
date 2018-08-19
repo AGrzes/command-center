@@ -324,9 +324,15 @@ Vue.component('goal-details', {
       </div>
     </div>
     <div class="form-group row">
-      <label for="measurement.due" class="col-sm-2 col-form-label">Measurement Due</label>
+      <label for="measurement.due" class="col-sm-2 col-form-label">Measurement Due Date</label>
       <div class="col-sm-10">
         <input type="date" class="form-control" id="measurement.due" v-model="goal.measurement.due">
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="measurement.done" class="col-sm-2 col-form-label">Measurement Done Date</label>
+      <div class="col-sm-10">
+        <input type="date" class="form-control" id="measurement.done" v-model="goal.measurement.done">
       </div>
     </div>
     <div class="form-group row">
