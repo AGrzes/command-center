@@ -308,6 +308,40 @@ Vue.component('goal-details', {
       </div>
     </div>
     <div class="form-group row">
+      <label for="measurement.kind" class="col-sm-2 col-form-label">Measurement Kind</label>
+      <div class="col-sm-10">
+        <select class="form-control custom-select" id="measurement.kind" v-model="goal.measurement.kind">
+          <option>pass/fail</option>
+          <option>number</option>
+          <option>amount</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group row" v-if="goal.measurement.kind === 'number' || goal.measurement.kind === 'amount'">
+      <label for="measurement.target" class="col-sm-2 col-form-label">Measurement Target</label>
+      <div class="col-sm-10">
+        <input type="number" class="form-control" id="measurement.target" v-model="goal.measurement.target">
+      </div>
+    </div>
+    <div class="form-group row" v-if="goal.measurement.kind === 'number' || goal.measurement.kind === 'amount'">
+      <label for="measurement.progress" class="col-sm-2 col-form-label">Measurement Progress</label>
+      <div class="col-sm-10">
+        <input type="number" class="form-control" id="measurement.progress" v-model="goal.measurement.progress">
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="measurement.due" class="col-sm-2 col-form-label">Measurement Due Date</label>
+      <div class="col-sm-10">
+        <input type="date" class="form-control" id="measurement.due" v-model="goal.measurement.due">
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="measurement.done" class="col-sm-2 col-form-label">Measurement Done Date</label>
+      <div class="col-sm-10">
+        <input type="date" class="form-control" id="measurement.done" v-model="goal.measurement.done">
+      </div>
+    </div>
+    <div class="form-group row">
       <label for="tags" class="col-sm-2 col-form-label">Tags</label>
       <div class="col-sm-10">
         <div class="input-group  mb-1" v-for="(tag,index) in goal.tags">
