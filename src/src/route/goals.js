@@ -247,9 +247,6 @@ Vue.component('goal-measure', {
             <div class="modal-body">
               <div class="form-group">
                 <div class="input-group">
-                  <div class="input-group-prepend">
-                    <div class="input-group-text">{{goal.measurement.progress}} + </div>
-                  </div>
                   <input type="number" class="form-control"  placeholder="Amount" v-model.number="amount">
                   <div class="input-group-append">
                     <div class="input-group-text">/ {{goal.measurement.target}}</div>
@@ -306,7 +303,7 @@ Vue.component('goal-measure', {
   data() {
     return {
       comment: null,
-      amount: 0,
+      amount: this.goal.measurement.progress,
       date: moment().format('YYYY-MM-DD')
     }
   },
