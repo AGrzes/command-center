@@ -15,6 +15,10 @@ function save(goal) {
   return axios.put(`/api/goals/${goal._id}`, goal).then(response => response.data)
 }
 
+function create() {
+  return axios.post(`/api/goals/`, {measurement:{}}).then(response => response.data)
+}
+
 Vue.component('goal-description', {
   props: ['description'],
   template: '<p class="mb-1" v-if="description">{{ description }}</p>'
@@ -641,6 +645,7 @@ export default [{
                 <input class="form-check-input" type="checkbox" id="showArchived" v-model="showArchived">
                 <label class="form-check-label" for="showArchived">Show archived</label>
               </div>
+              <a class="btn btn-primary btn-sm" @click="newGoal()">New</a>
             </div>
           </div>
         </div>
@@ -676,6 +681,11 @@ export default [{
           return _.filter(this.rawGoals, (goal) => (
               _.isEmpty(this.selectedTags) || !_.isEmpty(_.intersection(goal.tags, this.selectedTags))) &&
             (this.showArchived ? true : !goal.archive))
+        }
+      },
+      methods:{
+        newGoal(){
+          create().then((response)=>console.log(this.$router) ||this.$router.push({ name:'goals.details',params: { id: response.id }}))
         }
       }
     }
