@@ -17,13 +17,19 @@ router.get('/:id',(req,res,next)=>{
 router.put('/:id',json(), (req,res,next)=>{
   goalsDB.get(req.params.id)
   .catch((error)=> {
-    if (error.name === 'conflict') {
+    if (error.name === 'not_found') {
       return { _rev:null}
     } else {
       throw error
     }
   })
   .then(({_rev,...other})=>goalsDB.put({...other,...req.body,_rev}))
+  .then(goal=>res.send(goal))
+  .catch((err)=>res.status(500).send(err))
+})
+
+router.post('/',json(), (req,res,next)=>{
+  goalsDB.post(req.body)
   .then(goal=>res.send(goal))
   .catch((err)=>res.status(500).send(err))
 })

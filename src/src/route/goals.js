@@ -15,6 +15,10 @@ function save(goal) {
   return axios.put(`/api/goals/${goal._id}`, goal).then(response => response.data)
 }
 
+function create() {
+  return axios.post(`/api/goals/`, {measurement:{}}).then(response => response.data)
+}
+
 Vue.component('goal-description', {
   props: ['description'],
   template: '<p class="mb-1" v-if="description">{{ description }}</p>'
@@ -193,7 +197,7 @@ Vue.component('goal-increment', {
       $(this.$refs.modal).modal()
     },
     doIncrement() {
-      if (this.goal.measurement.target <= this.goal.measurement.progress + this.increment){
+      if (this.goal.measurement.target <= this.goal.measurement.progress + this.increment) {
         this.goal.history.push({
           event: 'close',
           date: this.date,
@@ -295,7 +299,7 @@ Vue.component('goal-measure', {
       })
       this.goal.measurement.done = this.date
       this.goal.measurement.progress = this.amount
-      this.goal.result = this.amount>=this.goal.measurement.template ? 'success' : 'failure'
+      this.goal.result = this.amount >= this.goal.measurement.template ? 'success' : 'failure'
       save(this.goal)
       $(this.$refs.modal).modal('hide')
     }
@@ -527,34 +531,34 @@ Vue.component('goal-details', {
   </form>
   `,
   methods: {
-    doSave(){
+    doSave() {
       save(this.goal)
     },
-    addTag(){
+    addTag() {
       this.goal.tags = this.goal.tags || []
       this.goal.tags.push(this.newTag)
       this.newTag = null
     },
-    removeTag(index){
-      this.goal.tags.splice(index,1)
+    removeTag(index) {
+      this.goal.tags.splice(index, 1)
     },
-    addLink(){
+    addLink() {
       this.goal.links = this.goal.links || []
       this.goal.links.push(this.newLink)
       this.newLink = {}
     },
-    removeLink(index){
-      this.goal.links.splice(index,1)
+    removeLink(index) {
+      this.goal.links.splice(index, 1)
     },
-    addEvent(){
+    addEvent() {
       this.goal.history = this.goal.history || []
       this.goal.history.push({})
     },
-    removeEvent(index){
-      this.goal.history.splice(index,1)
+    removeEvent(index) {
+      this.goal.history.splice(index, 1)
     }
   },
-  data(){
+  data() {
     return {
       newTag: null,
       newLink: {}
@@ -596,8 +600,8 @@ Vue.component('goals-archive', {
       $(this.$refs.modal).modal()
     },
     doArchive() {
-      this.goals.forEach((goal)=>{
-        if (!goal.archive && goal.measurement.done && moment(goal.measurement.done).isSameOrBefore(this.date,'day')){
+      this.goals.forEach((goal) => {
+        if (!goal.archive && goal.measurement.done && moment(goal.measurement.done).isSameOrBefore(this.date, 'day')) {
           goal.history.push({
             event: 'archive',
             date: moment().toISOString()
@@ -641,6 +645,7 @@ export default [{
                 <input class="form-check-input" type="checkbox" id="showArchived" v-model="showArchived">
                 <label class="form-check-label" for="showArchived">Show archived</label>
               </div>
+              <a class="btn btn-primary btn-sm" @click="newGoal()">New</a>
             </div>
           </div>
         </div>
@@ -665,17 +670,22 @@ export default [{
       },
       data: () => ({
         rawGoals: [],
-        selectedTags:[],
+        selectedTags: [],
         showArchived: false
       }),
-      computed:{
-        tags(){
-          return _.uniq(_.flatMap(this.rawGoals,'tags'))
+      computed: {
+        tags() {
+          return _.uniq(_.flatMap(this.rawGoals, 'tags'))
         },
-        goals(){
-          return _.filter(this.rawGoals,(goal)=>(
-            _.isEmpty(this.selectedTags)||!_.isEmpty(_.intersection(goal.tags,this.selectedTags)))&& 
-            (this.showArchived?true:!goal.archive))
+        goals() {
+          return _.filter(this.rawGoals, (goal) => (
+              _.isEmpty(this.selectedTags) || !_.isEmpty(_.intersection(goal.tags, this.selectedTags))) &&
+            (this.showArchived ? true : !goal.archive))
+        }
+      },
+      methods:{
+        newGoal(){
+          create().then((response)=>console.log(this.$router) ||this.$router.push({ name:'goals.details',params: { id: response.id }}))
         }
       }
     }
