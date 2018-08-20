@@ -428,8 +428,12 @@ Vue.component('goal-details', {
                     <input type="number" class="form-control" :id="'event-amount-'+index" v-model="event.amount">
                   </div>
                 </div>
+                <button type="button" class="btn btn-primary form-control" @click="removeEvent(index)">-</button>
               </div> 
             </div>
+          </div>
+          <div class="col-12 col-md-1">
+            <button type="button" class="btn btn-primary form-control" @click="addEvent()">+</button>
           </div>
         </div>
       </div>
@@ -456,6 +460,13 @@ Vue.component('goal-details', {
     },
     removeLink(index){
       this.goal.links.splice(index,1)
+    },
+    addEvent(){
+      this.goal.history = this.goal.history || []
+      this.goal.history.push({})
+    },
+    removeEvent(index){
+      this.goal.history.splice(index,1)
     }
   },
   data(){
