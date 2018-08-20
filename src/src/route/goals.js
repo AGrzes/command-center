@@ -397,6 +397,43 @@ Vue.component('goal-details', {
         </div>
       </div>
     </div>
+    <div class="form-group row">
+      <label for="history" class="col-sm-2 col-form-label">History</label>
+      <div class="col-sm-10">
+        <div class="row">
+          <div class="col-12 col-md-6 mb-4" v-for="(event,index) in goal.history">
+            <div class="card">
+              <div class="card-body">
+                <div class="form-group row">
+                  <label :for="'event-kind-'+index" class="col-sm-3 col-form-label">Event</label>
+                  <div class="col-sm-9">
+                    <input type="text" class="form-control" :id="'event-kind-'+index" v-model="event.event">
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label :for="'event-date-'+index" class="col-sm-3 col-form-label">Date</label>
+                  <div class="col-sm-9">
+                    <input type="date" class="form-control" :id="'event-date-'+index" v-model="event.date">
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label :for="'event-comment-'+index" class="col-sm-3 col-form-label">Comment</label>
+                  <div class="col-sm-9">
+                    <input type="text" class="form-control" :id="'event-comment-'+index" v-model="event.comment">
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label :for="'event-amount-'+index" class="col-sm-3 col-form-label">Amount</label>
+                  <div class="col-sm-9">
+                    <input type="number" class="form-control" :id="'event-amount-'+index" v-model="event.amount">
+                  </div>
+                </div>
+              </div> 
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <button type="button" class="btn btn-primary" @click="doSave()">Save</button>
   </form>
   `,
