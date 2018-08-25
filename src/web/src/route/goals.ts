@@ -1,22 +1,23 @@
 import axios from 'axios'
+import * as $ from 'jquery'
+import * as _ from 'lodash'
+import * as moment from 'moment'
 import Vue from 'vue'
-import moment from 'moment'
-import _ from 'lodash'
 
 function list() {
-  return axios.get('/api/goals').then(response => response.data)
+  return axios.get('/api/goals').then((response) => response.data)
 }
 
 function item(id) {
-  return axios.get(`/api/goals/${id}`).then(response => response.data)
+  return axios.get(`/api/goals/${id}`).then((response) => response.data)
 }
 
 function save(goal) {
-  return axios.put(`/api/goals/${goal._id}`, goal).then(response => response.data)
+  return axios.put(`/api/goals/${goal._id}`, goal).then((response) => response.data)
 }
 
 function create() {
-  return axios.post(`/api/goals/`, {measurement:{}}).then(response => response.data)
+  return axios.post(`/api/goals/`, {measurement: {}}).then((response) => response.data)
 }
 
 Vue.component('goal-description', {
@@ -33,7 +34,8 @@ Vue.component('goal-measurement', {
   props: ['measurement'],
   template: `
   <div class="progress">
-    <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" :style="{width: progress+'%'}">{{label}}</div>
+    <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0"
+      aria-valuemax="100" :style="{width: progress+'%'}">{{label}}</div>
   </div>`,
   computed: {
 
@@ -47,7 +49,7 @@ Vue.component('goal-measurement', {
           const max = this.measurement.target
           return (current / max) * 100
         default:
-          return 0;
+          return 0
       }
     },
     label() {
@@ -60,7 +62,7 @@ Vue.component('goal-measurement', {
           const max = this.measurement.target
           return `${current} / ${max}`
         default:
-          return 0;
+          return 0
       }
     }
   }
@@ -177,10 +179,10 @@ Vue.component('goal-increment', {
               </div>
               <div class="form-group">
                 <input type="date" class="form-control"  placeholder="Date" v-model="date">
-              </div>    
+              </div>
               <div class="form-group">
                 <input type="text" class="form-control"  placeholder="Comment" v-model="comment">
-              </div>          
+              </div>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -259,10 +261,10 @@ Vue.component('goal-measure', {
               </div>
               <div class="form-group">
                 <input type="date" class="form-control"  placeholder="Date" v-model="date">
-              </div>    
+              </div>
               <div class="form-group">
                 <input type="text" class="form-control"  placeholder="Comment" v-model="comment">
-              </div>          
+              </div>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -359,7 +361,8 @@ Vue.component('goal-item', {
       <goal-increment :goal="goal" class="mr-1"></goal-increment>
       <goal-measure :goal="goal" class="mr-1"></goal-measure>
       <goal-archive :goal="goal" class="mr-1"></goal-archive>
-      <router-link tag="a" class="btn btn-primary btn-sm mr-1" :to="{name:'goals.details',params: { id: goal._id }}">+</router-link>
+      <router-link tag="a" class="btn btn-primary btn-sm mr-1"
+        :to="{name:'goals.details',params: { id: goal._id }}">+</router-link>
     </div>
     <div class="row" v-if="expanded">
       <goal-description :description="goal.description" class="col-12 col-md-6"></goal-description>
@@ -455,7 +458,7 @@ Vue.component('goal-details', {
             <select class="form-control custom-select" id="kind" v-model="link.kind">
               <option>aoc</option>
               <option>project</option>
-            </select> 
+            </select>
           </div>
           <div class="col-12 col-md-4">
             <input type="url" class="form-control" id="target" v-model="link.target">
@@ -472,7 +475,7 @@ Vue.component('goal-details', {
             <select class="form-control custom-select" id="kind" v-model="newLink.kind">
               <option>aoc</option>
               <option>project</option>
-            </select> 
+            </select>
           </div>
           <div class="col-12 col-md-4">
             <input type="url" class="form-control" id="target" v-model="newLink.target">
@@ -518,7 +521,7 @@ Vue.component('goal-details', {
                   </div>
                 </div>
                 <button type="button" class="btn btn-primary form-control" @click="removeEvent(index)">-</button>
-              </div> 
+              </div>
             </div>
           </div>
           <div class="col-12 col-md-1">
@@ -583,7 +586,7 @@ Vue.component('goals-archive', {
             <div class="modal-body">
               <div class="form-group">
                 <input type="date" class="form-control"  placeholder="Date" v-model="date">
-              </div>  
+              </div>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -659,12 +662,12 @@ export default [{
       </div>
       `,
       beforeRouteEnter(to, from, next) {
-        list().then(goals => next(vm => {
+        list().then((goals) => next((vm) => {
           vm.rawGoals = goals
         }))
       },
       beforeRouteUpdate(to, from, next) {
-        list().then(goals => {
+        list().then((goals) => {
           this.rawGoals = goals
         })
       },
@@ -683,9 +686,9 @@ export default [{
             (this.showArchived ? true : !goal.archive))
         }
       },
-      methods:{
-        newGoal(){
-          create().then((response)=>console.log(this.$router) ||this.$router.push({ name:'goals.details',params: { id: response.id }}))
+      methods: {
+        newGoal() {
+          create().then((response) => this.$router.push({ name: 'goals.details', params: { id: response.id }}))
         }
       }
     }
@@ -699,20 +702,20 @@ export default [{
         <goal-details v-if="goal" :goal="goal"></goal-details>
       `,
       beforeRouteEnter(to, from, next) {
-        next(vm => {
-          item(vm.id).then(goal => {
+        next((vm) => {
+          item(vm.id).then((goal) => {
             vm.goal = goal
           })
         })
       },
       beforeRouteUpdate(to, from, next) {
-        item(this.id).then(goal => {
+        item(this.id).then((goal) => {
           this.goal = goal
         })
       },
       data: () => ({
         goal: null
       })
-    },
+    }
   }]
 }]

@@ -12,13 +12,18 @@ const routes = [{
         <div class="col-12">
           <nav class="navbar navbar-light bg-light navbar-expand-lg">
             <a class="navbar-brand" href="#">Command Center</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-toggle="collapse"
+              data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
               <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
               <ul class="navbar-nav">
-                <router-link tag="li" class="nav-item" :to="{name:'goals.list'}"><a class="nav-link">Goals</a></router-link>
-                <router-link tag="li" class="nav-item" :to="{name:'reminders'}"><a class="nav-link">Reminders</a></router-link>
+                <router-link tag="li" class="nav-item" :to="{name:'goals.list'}">
+                  <a class="nav-link">Goals</a>
+                </router-link>
+                <router-link tag="li" class="nav-item" :to="{name:'reminders'}">
+                  <a class="nav-link">Reminders</a>
+                </router-link>
               </ul>
             </div>
           </nav>
