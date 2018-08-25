@@ -1,7 +1,7 @@
-const {Router} = require('express')
-const {reminders: remindersDB} = require('./db')
-const marked = require('marked')
-const router = new Router()
+import {Router} from 'express'
+import {reminders as remindersDB} from './db'
+import * as marked from 'marked'
+export const router = new Router()
 
 router.get('/', (req, res, next) => {
   remindersDB.allDocs({include_docs: true})
@@ -17,4 +17,3 @@ router.get('/', (req, res, next) => {
     .catch((err) => res.status(500).send(err))
 })
 
-module.exports = router

@@ -1,7 +1,7 @@
-const {Router} =require('express')
-const {json} =require('body-parser')
-const {goals:goalsDB} = require('./db')
-const router = new Router()
+import {Router} from 'express'
+import {json} from 'body-parser'
+import {goals as goalsDB} from './db'
+export const router = new Router()
 
 router.get('/',(req,res,next)=>{
   goalsDB.allDocs({include_docs:true}).then(response=>response.rows.map(row=>row.doc))
@@ -33,5 +33,3 @@ router.post('/',json(), (req,res,next)=>{
   .then(goal=>res.send(goal))
   .catch((err)=>res.status(500).send(err))
 })
-
-module.exports = router
