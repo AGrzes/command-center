@@ -18,7 +18,8 @@
       ".tsx"
     ],
     "exclude": [
-      "**/*.d.ts"
+      "**/*.d.ts",
+      "web/**"
     ],
     "include": [
       "src/**/*"
