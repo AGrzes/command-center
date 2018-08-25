@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 function list() {
-  return axios.get('/api/reminders').then(response => response.data)
+  return axios.get('/api/reminders').then((response) => response.data)
 }
 
 export default [{
@@ -16,16 +16,16 @@ export default [{
             <p class="card-text" v-html="reminder.content"></p>
           </div>
         </div>
-      </div>  
+      </div>
     </div>
     `,
     beforeRouteEnter(to, from, next) {
-      list().then(reminders => next(vm => {
+      list().then((reminders) => next((vm) => {
         vm.reminders = reminders
       }))
     },
     beforeRouteUpdate(to, from, next) {
-      list().then(reminders => {
+      list().then((reminders) => {
         this.reminders = reminders
       })
     },
