@@ -3,8 +3,7 @@ import * as _ from 'lodash'
 import * as moment from 'moment'
 import Vue from 'vue'
 import {create, item, list, save} from './api'
-import './components/details'
-import './components/item'
+import './components'
 
 Vue.component('goal-description', {
   props: ['description'],
