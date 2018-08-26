@@ -1,5 +1,6 @@
 import './description'
 import './details'
+import './history'
 import './item'
 import './measurement'
 import './result'

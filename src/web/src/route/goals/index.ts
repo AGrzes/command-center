@@ -5,16 +5,6 @@ import Vue from 'vue'
 import {create, item, list, save} from './api'
 import './components'
 
-Vue.component('goal-history', {
-  props: ['history'],
-  template: `
-  <ul>
-    <li v-for="event in history">
-    {{event.date}} - {{event.event}}
-    </li>
-  </ul>
-  `
-})
 Vue.component('goal-links', {
   props: ['links'],
   template: `
