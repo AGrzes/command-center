@@ -5,17 +5,6 @@ import Vue from 'vue'
 import {create, item, list, save} from './api'
 import './components'
 
-Vue.component('goal-links', {
-  props: ['links'],
-  template: `
-  <ul class="list-unstyled">
-    <li v-for="link in links">
-    {{link.kind}}: <a :href="link.target">{{link.label}}</a>
-    </li>
-  </ul>
-  `
-})
-
 Vue.component('goal-tags', {
   props: ['tags'],
   template: '<span><span class="badge badge-primary badge-pill mr-1" v-for="tag in tags">{{tag}}</span></span>'
