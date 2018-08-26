@@ -5,16 +5,6 @@ import Vue from 'vue'
 import {create, item, list, save} from './api'
 import './components'
 
-Vue.component('goal-description', {
-  props: ['description'],
-  template: '<p class="mb-1" v-if="description">{{ description }}</p>'
-})
-
-Vue.component('goal-result', {
-  props: ['result'],
-  template: '<small>{{result}}</small>'
-})
-
 Vue.component('goal-history', {
   props: ['history'],
   template: `
