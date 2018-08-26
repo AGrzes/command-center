@@ -1,24 +1,8 @@
-import axios from 'axios'
 import * as $ from 'jquery'
 import * as _ from 'lodash'
 import * as moment from 'moment'
 import Vue from 'vue'
-
-function list() {
-  return axios.get('/api/goals').then((response) => response.data)
-}
-
-function item(id) {
-  return axios.get(`/api/goals/${id}`).then((response) => response.data)
-}
-
-function save(goal) {
-  return axios.put(`/api/goals/${goal._id}`, goal).then((response) => response.data)
-}
-
-function create() {
-  return axios.post(`/api/goals/`, {measurement: {}}).then((response) => response.data)
-}
+import {create, item, list, save} from './api'
 
 Vue.component('goal-description', {
   props: ['description'],
