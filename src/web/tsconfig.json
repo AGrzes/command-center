@@ -7,6 +7,6 @@
         "rootDir": "src"
     },
     "include": [
-        "src", "../src/reminders.ts", "../src/index.ts", "../src/goals.ts", "../src/db.ts", "../src/reminders.js", "../src/db.js", "../src/goals.js", "../src/index.js"
+        "src"
     ]
 }
