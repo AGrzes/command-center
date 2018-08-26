@@ -1,3 +1,4 @@
+import './archive'
 import './description'
 import './details'
 import './history'
