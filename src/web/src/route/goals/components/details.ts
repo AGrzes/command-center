@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import {save} from './api'
+import {save} from '../api'
 
 Vue.component('goal-details', {
   props: ['goal'],
