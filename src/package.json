@@ -44,6 +44,7 @@
   },
   "homepage": "https://github.com/AGrzes/command-center#readme",
   "dependencies": {
+    "@types/pouchdb-http": "^6.1.2",
     "axios": "^0.18.0",
     "connect-history-api-fallback": "^1.5.0",
     "express": "^4.16.3",
