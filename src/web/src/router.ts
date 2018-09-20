@@ -25,6 +25,9 @@ const routes = [{
                 <router-link tag="li" class="nav-item" :to="{name:'reminders'}">
                   <a class="nav-link">Reminders</a>
                 </router-link>
+                <router-link tag="li" class="nav-item" :to="{name:'progress'}">
+                  <a class="nav-link">Progress</a>
+                </router-link>
               </ul>
             </div>
           </nav>
