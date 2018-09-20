@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import goals from './route/goals'
+import progress from './route/progress'
 import reminders from './route/reminders'
 Vue.use(VueRouter)
 const routes = [{
@@ -24,6 +25,9 @@ const routes = [{
                 <router-link tag="li" class="nav-item" :to="{name:'reminders'}">
                   <a class="nav-link">Reminders</a>
                 </router-link>
+                <router-link tag="li" class="nav-item" :to="{name:'progress'}">
+                  <a class="nav-link">Progress</a>
+                </router-link>
               </ul>
             </div>
           </nav>
@@ -34,7 +38,8 @@ const routes = [{
   },
   children: [
     ...goals,
-    ...reminders
+    ...reminders,
+    ...progress
   ]
 }]
 
