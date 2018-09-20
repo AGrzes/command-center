@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import goals from './route/goals'
+import progress from './route/progress'
 import reminders from './route/reminders'
 Vue.use(VueRouter)
 const routes = [{
@@ -34,7 +35,8 @@ const routes = [{
   },
   children: [
     ...goals,
-    ...reminders
+    ...reminders,
+    ...progress
   ]
 }]
 
