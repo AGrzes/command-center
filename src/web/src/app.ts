@@ -5,6 +5,7 @@ import router from './router'
 
 Vue.use(VueApexCharts)
 Vue.use(PortalVue)
+Vue.component('apexcharts', VueApexCharts)
 
 const app = new Vue({
   el: 'body .container',
