@@ -1,4 +1,5 @@
 import axios from 'axios'
+import * as _ from 'lodash'
 import { ProgressItem } from '../model/progress'
 
 function defined(): Promise<ProgressItem[]> {
@@ -7,6 +8,9 @@ function defined(): Promise<ProgressItem[]> {
 function resolved(): Promise<ProgressItem[]> {
   return axios.get('/api/progress/resolved').then((response) => response.data)
 }
+function fetch(view: string, group: string, limit: number = 100): Promise<ProgressItem[]|any> {
+  return axios.get(`/api/progress/${view}`, {params: {group, limit}}).then((response) => response.data)
+}
 
 export default [{
   name: 'progress',
@@ -14,6 +18,13 @@ export default [{
   component: {
     template: `
     <div class="row">
+      <div class="col-6">
+        <div class="card">
+          <div class="card-body">
+            <apexcharts :series="daily.series" :options="daily.options" type="line"></apexcharts>
+          </div>
+        </div>
+      </div>
       <div class="col-6">
         <ul class="list-group">
           <li class="list-group-item" v-for="entry in resolved">{{entry.summary}}</li>
@@ -27,7 +38,7 @@ export default [{
     </div>
     `,
     beforeRouteEnter(to, from, next) {
-      Promise.all([defined(), resolved()]).then(([definedEntries,resolvedEntries])=>{
+      Promise.all([defined(), resolved()]).then(([definedEntries, resolvedEntries]) => {
         next((vm) => {
           vm.defined = definedEntries
           vm.resolved = resolvedEntries
@@ -42,10 +53,22 @@ export default [{
         this.defined = entries
       })
     },
-    data(): {defined: ProgressItem[], resolved: ProgressItem[]} {
+    mounted() {
+      fetch('resolved', 'day', 14).then((data) => {
+        this.daily.series.push({
+          data: _.map(_.reverse(data.rows), (row) => ({x: `${row.key[0]}-${row.key[1]}-${row.key[2]}`, y: row.value})),
+          name: 'Resolved daily'
+        })
+        this.daily.options.xaxis = this.daily.options.xaxis || {}
+        this.daily.options.xaxis.type = 'datetime'
+      })
+    },
+    data(): {defined: ProgressItem[], resolved: ProgressItem[], series: any, daily: any} {
       return {
         defined: [],
-        resolved: []
+        resolved: [],
+        series: {resolvedDaily: []},
+        daily: { options: {}, series: [] }
       }
     }
   }
