@@ -12,6 +12,17 @@ function fetch(view: string, group: string, limit: number = 100): Promise<Progre
   return axios.get(`/api/progress/${view}`, {params: {group, limit}}).then((response) => response.data)
 }
 
+function prepareChart(name, target): (data) => any {
+  return (data) => {
+    target.series.push({
+      data: _.map(_.reverse(data.rows), (row) => ({x: `${row.key[0]}-${row.key[1]}-${row.key[2]}`, y: row.value})),
+      name
+    })
+    target.options.xaxis = target.options.xaxis || {}
+    target.options.xaxis.type = 'datetime'
+  }
+}
+
 export default [{
   name: 'progress',
   path: 'progress',
@@ -54,14 +65,8 @@ export default [{
       })
     },
     mounted() {
-      fetch('resolved', 'day', 14).then((data) => {
-        this.daily.series.push({
-          data: _.map(_.reverse(data.rows), (row) => ({x: `${row.key[0]}-${row.key[1]}-${row.key[2]}`, y: row.value})),
-          name: 'Resolved daily'
-        })
-        this.daily.options.xaxis = this.daily.options.xaxis || {}
-        this.daily.options.xaxis.type = 'datetime'
-      })
+      fetch('resolved', 'day', 14).then(prepareChart('Resolved daily', this.daily))
+      fetch('defined', 'day', 14).then(prepareChart('Defined daily', this.daily))
     },
     data(): {defined: ProgressItem[], resolved: ProgressItem[], series: any, daily: any} {
       return {
