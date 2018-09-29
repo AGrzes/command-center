@@ -15,7 +15,7 @@ function fetch(view: string, group: string, limit: number = 100): Promise<Progre
 function prepareChart(name, target): (data) => any {
   return (data) => {
     target.series.push({
-      data: _.map(_.reverse(data.rows), (row) => ({x: `${row.key[0]}-${row.key[1]}-${row.key[2]}`, y: row.value})),
+      data: _.map(_.reverse(data.rows), (row) => ({x: _.join(row.key, '-'), y: row.value})),
       name
     })
     target.options.xaxis = target.options.xaxis || {}
@@ -33,6 +33,13 @@ export default [{
         <div class="card">
           <div class="card-body">
             <apexcharts :series="daily.series" :options="daily.options" type="line"></apexcharts>
+          </div>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="card">
+          <div class="card-body">
+            <apexcharts :series="monthly.series" :options="monthly.options" type="line"></apexcharts>
           </div>
         </div>
       </div>
@@ -67,13 +74,16 @@ export default [{
     mounted() {
       fetch('resolved', 'day', 14).then(prepareChart('Resolved daily', this.daily))
       fetch('defined', 'day', 14).then(prepareChart('Defined daily', this.daily))
+      fetch('resolved', 'month', 12).then(prepareChart('Resolved daily', this.monthly))
+      fetch('defined', 'month', 12).then(prepareChart('Defined daily', this.monthly))
     },
-    data(): {defined: ProgressItem[], resolved: ProgressItem[], series: any, daily: any} {
+    data(): {defined: ProgressItem[], resolved: ProgressItem[], series: any, daily: any, monthly: any} {
       return {
         defined: [],
         resolved: [],
         series: {resolvedDaily: []},
-        daily: { options: {}, series: [] }
+        daily: { options: {}, series: [] },
+        monthly: { options: {}, series: [] },
       }
     }
   }
