@@ -44,6 +44,13 @@ export default [{
         </div>
       </div>
       <div class="col-6">
+        <div class="card">
+          <div class="card-body">
+            <apexcharts :series="quarterly.series" :options="quarterly.options" type="line"></apexcharts>
+          </div>
+        </div>
+      </div>
+      <div class="col-6">
         <ul class="list-group">
           <li class="list-group-item" v-for="entry in resolved">{{entry.summary}}</li>
         </ul>
@@ -74,16 +81,19 @@ export default [{
     mounted() {
       fetch('resolved', 'day', 14).then(prepareChart('Resolved daily', this.daily))
       fetch('defined', 'day', 14).then(prepareChart('Defined daily', this.daily))
-      fetch('resolved', 'month', 12).then(prepareChart('Resolved daily', this.monthly))
-      fetch('defined', 'month', 12).then(prepareChart('Defined daily', this.monthly))
+      fetch('resolved', 'month', 12).then(prepareChart('Resolved monthly', this.monthly))
+      fetch('defined', 'month', 12).then(prepareChart('Defined monthly', this.monthly))
+      fetch('resolved', 'quarter', 12).then(prepareChart('Resolved quarterly', this.quarterly))
+      fetch('defined', 'quarter', 12).then(prepareChart('Defined quarterly', this.quarterly))
     },
-    data(): {defined: ProgressItem[], resolved: ProgressItem[], series: any, daily: any, monthly: any} {
+    data(): {defined: ProgressItem[], resolved: ProgressItem[], series: any, daily: any, monthly: any, quarterly: any} {
       return {
         defined: [],
         resolved: [],
         series: {resolvedDaily: []},
         daily: { options: {}, series: [] },
         monthly: { options: {}, series: [] },
+        quarterly: { options: {}, series: [] }
       }
     }
   }
