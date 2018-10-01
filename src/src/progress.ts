@@ -36,7 +36,7 @@ router.get('/:query', (req, res) => {
           rows: _.map(_.groupBy(items.rows, (row) => {
             const monthYear = moment(_.join(row.key, '-'))
             return `${monthYear.year()}Q${monthYear.quarter()}`
-          }), (rows, key) => ({key, value: _(rows).map('value').sum()}))
+          }), (rows, key) => ({key: [key], value: _(rows).map('value').sum()}))
         }
       })
       .then((items) => res.send(items))
