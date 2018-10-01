@@ -1,4 +1,6 @@
 import {Router} from 'express'
+import * as _ from 'lodash'
+import * as moment from 'moment'
 import {progress as progressDB} from './db'
 export const router = Router()
 
@@ -22,6 +24,21 @@ router.get('/:query', (req, res) => {
     progressDB.query(`queries/${req.params.query}`, {
       limit, descending: true, group: true, group_level: 2
     })
+      .then((items) => res.send(items))
+      .catch((err) => res.status(500).send(err))
+    break
+    case 'quarter':
+    progressDB.query(`queries/${req.params.query}`, {
+      limit: limit * 3, descending: true, group: true, group_level: 2
+    })
+      .then((items) => {
+        return {
+          rows: _.map(_.groupBy(items.rows, (row) => {
+            const monthYear = moment(_.join(row.key, '-'))
+            return `${monthYear.year()}Q${monthYear.quarter()}`
+          }), (rows, key) => ({key, value: _(rows).map('value').sum()}))
+        }
+      })
       .then((items) => res.send(items))
       .catch((err) => res.status(500).send(err))
     break
