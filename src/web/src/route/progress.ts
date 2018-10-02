@@ -86,14 +86,14 @@ export default [{
       })
     },
     mounted() {
-      fetch('resolved', 'day', 14).then(prepareChart('Resolved daily', this.daily))
-      fetch('defined', 'day', 14).then(prepareChart('Defined daily', this.daily))
-      fetch('resolved', 'month', 12).then(prepareChart('Resolved monthly', this.monthly))
-      fetch('defined', 'month', 12).then(prepareChart('Defined monthly', this.monthly))
-      fetch('resolved', 'quarter', 12).then(prepareChart('Resolved quarterly', this.quarterly))
-      fetch('defined', 'quarter', 12).then(prepareChart('Defined quarterly', this.quarterly))
-      fetch('resolved', 'week', 12).then(prepareChart('Resolved weekly', this.weekly))
-      fetch('defined', 'week', 12).then(prepareChart('Defined weekly', this.weekly))
+      fetch('actionable:resolved', 'day', 14).then(prepareChart('Resolved daily', this.daily))
+      fetch('actionable:defined', 'day', 14).then(prepareChart('Defined daily', this.daily))
+      fetch('actionable:resolved', 'month', 12).then(prepareChart('Resolved monthly', this.monthly))
+      fetch('actionable:defined', 'month', 12).then(prepareChart('Defined monthly', this.monthly))
+      fetch('actionable:resolved', 'quarter', 12).then(prepareChart('Resolved quarterly', this.quarterly))
+      fetch('actionable:defined', 'quarter', 12).then(prepareChart('Defined quarterly', this.quarterly))
+      fetch('actionable:resolved', 'week', 12).then(prepareChart('Resolved weekly', this.weekly))
+      fetch('actionable:defined', 'week', 12).then(prepareChart('Defined weekly', this.weekly))
     },
     data(): {
       defined: ProgressItem[],
