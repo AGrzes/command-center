@@ -51,6 +51,13 @@ export default [{
         </div>
       </div>
       <div class="col-6">
+        <div class="card">
+          <div class="card-body">
+            <apexcharts :series="weekly.series" :options="weekly.options" type="line"></apexcharts>
+          </div>
+        </div>
+      </div>
+      <div class="col-6">
         <ul class="list-group">
           <li class="list-group-item" v-for="entry in resolved">{{entry.summary}}</li>
         </ul>
@@ -85,15 +92,25 @@ export default [{
       fetch('defined', 'month', 12).then(prepareChart('Defined monthly', this.monthly))
       fetch('resolved', 'quarter', 12).then(prepareChart('Resolved quarterly', this.quarterly))
       fetch('defined', 'quarter', 12).then(prepareChart('Defined quarterly', this.quarterly))
+      fetch('resolved', 'week', 12).then(prepareChart('Resolved weekly', this.weekly))
+      fetch('defined', 'week', 12).then(prepareChart('Defined weekly', this.weekly))
     },
-    data(): {defined: ProgressItem[], resolved: ProgressItem[], series: any, daily: any, monthly: any, quarterly: any} {
+    data(): {
+      defined: ProgressItem[],
+      resolved: ProgressItem[],
+      series: any,
+      daily: any,
+      monthly: any,
+      quarterly: any,
+      weekly: any} {
       return {
         defined: [],
         resolved: [],
         series: {resolvedDaily: []},
         daily: { options: {}, series: [] },
         monthly: { options: {}, series: [] },
-        quarterly: { options: {}, series: [] }
+        quarterly: { options: {}, series: [] },
+        weekly: { options: {}, series: [] }
       }
     }
   }

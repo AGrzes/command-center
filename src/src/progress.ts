@@ -42,6 +42,22 @@ router.get('/:query', (req, res) => {
       .then((items) => res.send(items))
       .catch((err) => res.status(500).send(err))
     break
+    case 'week':
+    progressDB.query(`queries/${req.params.query}`, {
+      limit: limit * 7, descending: true, group: true, group_level: 3
+    })
+      .then((items) => {
+        return {
+          rows: _.map(_.groupBy(items.rows, (row) => {
+            const monthYear = moment(_.join(row.key, '-'))
+            return `${monthYear.weekYear()}W${monthYear.week()}`
+          }), (rows, key) => ({key: [key], value: _(rows).map('value').sum()}))
+        }
+      })
+      .then((items) => res.send(items))
+      .catch((err) => res.status(500).send(err))
+    break
+
     case 'year':
     progressDB.query(`queries/${req.params.query}`, {
       limit, descending: true, group: true, group_level: 1
