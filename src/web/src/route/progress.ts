@@ -23,6 +23,17 @@ function prepareChart(name, target): (data) => any {
   }
 }
 
+interface ChartData {
+  options: any
+  series: Array<{
+    data: Array<number|{
+      x: string|number
+      y: number
+    }>
+    name: string
+  }>
+}
+
 export default [{
   name: 'progress',
   path: 'progress',
@@ -54,6 +65,13 @@ export default [{
         <div class="card">
           <div class="card-body">
             <apexcharts :series="weekly.series" :options="weekly.options" type="line"></apexcharts>
+          </div>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="card">
+          <div class="card-body">
+            <apexcharts :series="projects.series" :options="projects.options" type="line"></apexcharts>
           </div>
         </div>
       </div>
@@ -94,23 +112,26 @@ export default [{
       fetch('actionable:defined', 'quarter', 12).then(prepareChart('Defined quarterly', this.quarterly))
       fetch('actionable:resolved', 'week', 12).then(prepareChart('Resolved weekly', this.weekly))
       fetch('actionable:defined', 'week', 12).then(prepareChart('Defined weekly', this.weekly))
+      fetch('projects:defined', 'month', 12).then(prepareChart('Projects defined monthly', this.projects))
+      fetch('projects:resolved', 'month', 12).then(prepareChart('Projects resolved monthly', this.projects))
     },
     data(): {
       defined: ProgressItem[],
       resolved: ProgressItem[],
-      series: any,
-      daily: any,
-      monthly: any,
-      quarterly: any,
-      weekly: any} {
+      daily: ChartData,
+      monthly: ChartData,
+      quarterly: ChartData,
+      weekly: ChartData,
+      projects: ChartData
+    } {
       return {
         defined: [],
         resolved: [],
-        series: {resolvedDaily: []},
         daily: { options: {}, series: [] },
         monthly: { options: {}, series: [] },
         quarterly: { options: {}, series: [] },
-        weekly: { options: {}, series: [] }
+        weekly: { options: {}, series: [] },
+        projects: { options: {}, series: [] }
       }
     }
   }
