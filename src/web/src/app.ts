@@ -1,10 +1,11 @@
 import * as PortalVue from 'portal-vue'
 import Vue from 'vue'
-import VueApexCharts from 'vue-apexcharts'
+import * as VueApexCharts from 'vue-apexcharts'
 import router from './router'
 
 Vue.use(VueApexCharts)
 Vue.use(PortalVue)
+Vue.component('apexcharts', VueApexCharts)
 
 const app = new Vue({
   el: 'body .container',
