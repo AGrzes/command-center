@@ -16,9 +16,9 @@ function last(unit: moment.unitOfTime.DurationConstructor, count: number, data: 
   const result = []
   let target = { key: moment().endOf(unit).format('YYYY-MM-DD'), value: 0}
   let sourceOffset = 0
-  while ( result.length < count && sourceOffset < data.length) {
-    const sourceTime = moment(data[sourceOffset].key.join('-')).endOf(unit).format('YYYY-MM-DD')
-    if (sourceTime === target.key) {
+  while ( result.length < count) {
+    if (sourceOffset < data.length &&
+      moment(data[sourceOffset].key.join('-')).endOf(unit).format('YYYY-MM-DD') === target.key) {
       target.value += data[sourceOffset].value
       sourceOffset++
     } else {
