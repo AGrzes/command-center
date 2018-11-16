@@ -10,6 +10,25 @@ router.get('/', (req, res, next) => {
     .then((items) => res.send(items))
     .catch((err) => res.status(500).send(err))
 })
+type DataIn = Array<{key: string[], value: number}>
+type DataOut = Array<{key: string, value: number}>
+function last(unit: moment.unitOfTime.DurationConstructor, count: number, data: DataIn): DataOut {
+  const result = []
+  let target = { key: moment().endOf(unit).format('YYYY-MM-DD'), value: 0}
+  let sourceOffset = 0
+  while ( result.length < count) {
+    if (sourceOffset < data.length &&
+      moment(data[sourceOffset].key.join('-')).endOf(unit).format('YYYY-MM-DD') === target.key) {
+      target.value += data[sourceOffset].value
+      sourceOffset++
+    } else {
+      result.push(target)
+      target = { key: moment().subtract(result.length, unit).endOf(unit).format('YYYY-MM-DD'), value: 0}
+    }
+  }
+  return result
+}
+
 router.get('/:query', (req, res) => {
   const limit = req.query.limit || 100
   switch (req.query.group) {
@@ -17,14 +36,14 @@ router.get('/:query', (req, res) => {
     progressDB.query(`queries/${req.params.query}`, {
       limit, descending: true, group: true, group_level: 3
     })
-      .then((items) => res.send(items))
+      .then((items) => res.send({rows: last('day', limit, items.rows)}))
       .catch((err) => res.status(500).send(err))
     break
     case 'month':
     progressDB.query(`queries/${req.params.query}`, {
       limit, descending: true, group: true, group_level: 2
     })
-      .then((items) => res.send(items))
+      .then((items) => res.send({rows: last('month', limit, items.rows)}))
       .catch((err) => res.status(500).send(err))
     break
     case 'quarter':
@@ -33,10 +52,7 @@ router.get('/:query', (req, res) => {
     })
       .then((items) => {
         return {
-          rows: _.map(_.groupBy(items.rows, (row) => {
-            const monthYear = moment(_.join(row.key, '-'))
-            return `${monthYear.year()}Q${monthYear.quarter()}`
-          }), (rows, key) => ({key: [key], value: _(rows).map('value').sum()}))
+          rows: last('quarter', limit, items.rows)
         }
       })
       .then((items) => res.send(items))
@@ -48,10 +64,7 @@ router.get('/:query', (req, res) => {
     })
       .then((items) => {
         return {
-          rows: _.map(_.groupBy(items.rows, (row) => {
-            const monthYear = moment(_.join(row.key, '-'))
-            return `${monthYear.weekYear()}W${monthYear.week()}`
-          }), (rows, key) => ({key: [key], value: _(rows).map('value').sum()}))
+          rows: last('week', limit, items.rows)
         }
       })
       .then((items) => res.send(items))
@@ -62,7 +75,7 @@ router.get('/:query', (req, res) => {
     progressDB.query(`queries/${req.params.query}`, {
       limit, descending: true, group: true, group_level: 1
     })
-      .then((items) => res.send(items))
+      .then((items) => res.send({rows: last('year', limit, items.rows)}))
       .catch((err) => res.status(500).send(err))
     break
     default:
