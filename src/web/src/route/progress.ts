@@ -64,17 +64,6 @@ function resolved(): Promise<ProgressItem[]> {
   return axios.get('/api/progress/resolved').then((response) => response.data)
 }
 
-interface ChartData {
-  options: any
-  series: Array<{
-    data: Array<number|{
-      x: string|number
-      y: number
-    }>
-    name: string
-  }>
-}
-
 export default [{
   name: 'progress',
   path: 'progress',
