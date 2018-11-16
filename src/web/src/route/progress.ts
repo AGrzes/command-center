@@ -43,12 +43,13 @@ Vue.component('progress-chart', {
       .then((response) => response.data).then((data) => this.chartData = {
           datasets: [...this.chartData.datasets, {
           label: query.label || query.view,
-          lineTension: 0,
+          cubicInterpolationMode: 'monotone',
           fill: false,
           backgroundColor: query.color || nthColor(this.chartData.datasets.length),
           borderColor: query.color || nthColor(this.chartData.datasets.length),
+          borderWidth: 5,
           data: _(data.rows).reverse().map((row) => ({
-            x: _.join(row.key, '-'),
+            x: row.key,
             y: row.value
           })).value()
         }]
