@@ -9,6 +9,6 @@ Vue.use(PortalVue)
 Vue.component('apexcharts', VueApexCharts)
 
 const app = new Vue({
-  el: 'body .container',
+  el: 'body .container-fluid',
   router
 })
