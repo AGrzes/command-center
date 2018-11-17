@@ -1,9 +1,9 @@
 import axios from 'axios'
 import * as _ from 'lodash'
-import { ProgressItem } from '../model/progress'
-
+import moment = require('moment')
 import Vue from 'vue'
 import { Line, mixins } from 'vue-chartjs'
+import { ProgressItem } from '../model/progress'
 interface Query {
   view: string
   label?: string
@@ -144,12 +144,24 @@ export default [{
         <div class="row">
           <div class="col-6">
             <ul class="list-group">
-              <li class="list-group-item" v-for="entry in resolved">{{entry.summary}}</li>
+              <template v-for="(entries,day) in resolved">
+                <li class="list-group-item" ><h6>{{day}}</h6></li>
+                <li class="list-group-item" v-for="entry in entries">
+                  <span class="badge badge-primary mr-1" v-for="label in filterLabels(entry.labels)">{{label}}</span>
+                  {{entry.summary}}
+                </li>
+              </template>
             </ul>
           </div>
           <div class="col-6">
             <ul class="list-group">
-              <li class="list-group-item" v-for="entry in defined">{{entry.summary}}</li>
+            <template v-for="(entries,day) in defined">
+            <li class="list-group-item" ><h6>{{day}}</h6></li>
+            <li class="list-group-item" v-for="entry in entries">
+              <span class="badge badge-primary mr-1" v-for="label in filterLabels(entry.labels)">{{label}}</span>
+              {{entry.summary}}
+            </li>
+          </template>
             </ul>
           </div>
         </div>
@@ -159,8 +171,8 @@ export default [{
     beforeRouteEnter(to, from, next) {
       Promise.all([defined(), resolved()]).then(([definedEntries, resolvedEntries]) => {
         next((vm) => {
-          vm.defined = definedEntries
-          vm.resolved = resolvedEntries
+          vm.defined = _.groupBy(definedEntries, (entry) => moment(entry.defined).format('YYYY-MM-DD'))
+          vm.resolved = _.groupBy(resolvedEntries, (entry) => moment(entry.resolved).format('YYYY-MM-DD'))
         })
       })
     },
@@ -179,6 +191,11 @@ export default [{
       return {
         defined: [],
         resolved: []
+      }
+    },
+    methods: {
+      filterLabels(labels: string[]) {
+        return _.intersection(labels, ['jira', 'github'])
       }
     }
   }
