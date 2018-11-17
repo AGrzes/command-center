@@ -76,68 +76,80 @@ export default [{
     template: `
     <div class="row">
       <div class="col-6 mb-4">
-        <div class="card">
-          <div class="card-body">
-            <progress-chart :queries="[
-              {view: 'actionable:resolved',label:'Resolved Daily',color:'#33ca7f',params: {group: 'day',limit: 14}},
-              {view: 'actionable:defined',label:'Defined Daily',color:'#f24333',params: {group: 'day',limit: 14}}]">
-            </progress-chart>
+        <div class="row">
+          <div class="col-6 mb-4">
+            <div class="card">
+              <div class="card-body">
+                <progress-chart :queries="[
+                  {view: 'actionable:resolved',label:'Resolved Daily',color:'#33ca7f',params: {group: 'day',limit: 14}},
+                  {view: 'actionable:defined',label:'Defined Daily',color:'#f24333',params: {group: 'day',limit: 14}}]">
+                </progress-chart>
+              </div>
+            </div>
+          </div>
+          <div class="col-6 mb-4">
+            <div class="card">
+              <div class="card-body">
+                <progress-chart timeUnit="month" :queries="[
+                  {view: 'actionable:resolved',label:'Resolved Monthly',color:'#33ca7f',
+                    params: {group: 'month',limit: 12}},
+                  {view: 'actionable:defined',label:'Defined Monthly',color:'#f24333',
+                    params: {group: 'month',limit: 12}}]">
+                </progress-chart>
+              </div>
+            </div>
+          </div>
+          <div class="col-6 mb-4">
+            <div class="card">
+              <div class="card-body">
+                <progress-chart timeUnit="quarter" :queries="[
+                  {view: 'actionable:resolved',label:'Resolved Quarterly',color:'#33ca7f',
+                    params: {group: 'quarter',limit: 12}},
+                  {view: 'actionable:defined',label:'Defined Quarterly',color:'#f24333',
+                    params: {group: 'quarter',limit: 12}}]">
+                </progress-chart>
+              </div>
+            </div>
+          </div>
+          <div class="col-6 mb-4">
+            <div class="card">
+              <div class="card-body">
+                <progress-chart timeUnit="week" :queries="[
+                  {view: 'actionable:resolved',label:'Resolved Weekly',color:'#33ca7f',
+                    params: {group: 'week',limit: 12}},
+                  {view: 'actionable:defined',label:'Defined Weekly',color:'#f24333',
+                    params: {group: 'week',limit: 12}}]">
+                </progress-chart>
+              </div>
+            </div>
+          </div>
+          <div class="col-6 mb-4">
+            <div class="card">
+              <div class="card-body">
+                <progress-chart timeUnit="month" :queries="[
+                  {view: 'projects:resolved',label:'Projects Resolved Monthly',color:'#33ca7f',
+                    params: {group: 'month',limit: 12}},
+                  {view: 'projects:defined',label:' ProjectsDefined Monthly',color:'#f24333',
+                    params: {group: 'month',limit: 12}}]">
+                </progress-chart>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-      <div class="col-6 mb-4">
-        <div class="card">
-          <div class="card-body">
-            <progress-chart timeUnit="month" :queries="[
-              {view: 'actionable:resolved',label:'Resolved Monthly',color:'#33ca7f',params: {group: 'month',limit: 12}},
-              {view: 'actionable:defined',label:'Defined Monthly',color:'#f24333',params: {group: 'month',limit: 12}}]">
-            </progress-chart>
+      <div class="col-6 mb-4 order-md-first">
+        <div class="row">
+          <div class="col-6">
+            <ul class="list-group">
+              <li class="list-group-item" v-for="entry in resolved">{{entry.summary}}</li>
+            </ul>
+          </div>
+          <div class="col-6">
+            <ul class="list-group">
+              <li class="list-group-item" v-for="entry in defined">{{entry.summary}}</li>
+            </ul>
           </div>
         </div>
-      </div>
-      <div class="col-6 mb-4">
-        <div class="card">
-          <div class="card-body">
-            <progress-chart timeUnit="quarter" :queries="[
-              {view: 'actionable:resolved',label:'Resolved Quarterly',color:'#33ca7f',
-                params: {group: 'quarter',limit: 12}},
-              {view: 'actionable:defined',label:'Defined Quarterly',color:'#f24333',
-                params: {group: 'quarter',limit: 12}}]">
-            </progress-chart>
-          </div>
-        </div>
-      </div>
-      <div class="col-6 mb-4">
-        <div class="card">
-          <div class="card-body">
-            <progress-chart timeUnit="week" :queries="[
-              {view: 'actionable:resolved',label:'Resolved Weekly',color:'#33ca7f',params: {group: 'week',limit: 12}},
-              {view: 'actionable:defined',label:'Defined Weekly',color:'#f24333',params: {group: 'week',limit: 12}}]">
-            </progress-chart>
-          </div>
-        </div>
-      </div>
-      <div class="col-6 mb-4">
-        <div class="card">
-          <div class="card-body">
-            <progress-chart timeUnit="month" :queries="[
-              {view: 'projects:resolved',label:'Projects Resolved Monthly',color:'#33ca7f',
-                params: {group: 'month',limit: 12}},
-              {view: 'projects:defined',label:' ProjectsDefined Monthly',color:'#f24333',
-                params: {group: 'month',limit: 12}}]">
-            </progress-chart>
-          </div>
-        </div>
-      </div>
-      <div class="col-6">
-        <ul class="list-group">
-          <li class="list-group-item" v-for="entry in resolved">{{entry.summary}}</li>
-        </ul>
-      </div>
-      <div class="col-6">
-        <ul class="list-group">
-          <li class="list-group-item" v-for="entry in defined">{{entry.summary}}</li>
-        </ul>
       </div>
     </div>
     `,
