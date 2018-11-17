@@ -148,8 +148,8 @@ export default [{
           <div class="col-6">
             <ul class="list-group">
               <template v-for="(entries,day) in resolved">
-                <li class="list-group-item" ><h6>{{day}}</h6></li>
-                <li class="list-group-item" v-for="entry in entries">
+                <li class="list-group-item py-1 list-group-item-info" ><strong>{{day}}</strong></li>
+                <li class="list-group-item py-1" v-for="entry in entries">
                   <span class="badge badge-primary mr-1" v-for="label in filterLabels(entry.labels)">{{label}}</span>
                   {{entry.summary}}
                 </li>
@@ -159,8 +159,8 @@ export default [{
           <div class="col-6">
             <ul class="list-group">
             <template v-for="(entries,day) in defined">
-            <li class="list-group-item" ><h6>{{day}}</h6></li>
-            <li class="list-group-item" v-for="entry in entries">
+            <li class="list-group-item py-1 list-group-item-info" ><strong>{{day}}</strong></li>
+            <li class="list-group-item py-1" v-for="entry in entries">
               <span class="badge badge-primary mr-1" v-for="label in filterLabels(entry.labels)">{{label}}</span>
               {{entry.summary}}
             </li>
