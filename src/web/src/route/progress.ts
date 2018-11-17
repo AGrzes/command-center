@@ -79,9 +79,9 @@ export default [{
   component: {
     template: `
     <div class="row">
-      <div class="col-6 mb-4">
+      <div class="col-12 col-md-8 col-lg-6 mb-4">
         <div class="row">
-          <div class="col-6 mb-4">
+          <div class="col-12 col-xl-6 mb-4">
             <div class="card">
               <div class="card-body">
                 <progress-chart :queries="[
@@ -93,7 +93,7 @@ export default [{
               </div>
             </div>
           </div>
-          <div class="col-6 mb-4">
+          <div class="col-12 col-xl-6 mb-4">
             <div class="card">
               <div class="card-body">
                 <progress-chart timeUnit="month" :queries="[
@@ -105,7 +105,7 @@ export default [{
               </div>
             </div>
           </div>
-          <div class="col-6 mb-4">
+          <div class="col-12 col-xl-6 mb-4">
             <div class="card">
               <div class="card-body">
                 <progress-chart timeUnit="quarter" :queries="[
@@ -117,7 +117,7 @@ export default [{
               </div>
             </div>
           </div>
-          <div class="col-6 mb-4">
+          <div class="col-12 col-xl-6 mb-4">
             <div class="card">
               <div class="card-body">
                 <progress-chart timeUnit="week" :queries="[
@@ -129,7 +129,7 @@ export default [{
               </div>
             </div>
           </div>
-          <div class="col-6 mb-4">
+          <div class="col-12 col-xl-6 mb-4">
             <div class="card">
               <div class="card-body">
                 <progress-chart timeUnit="month" :queries="[
@@ -143,9 +143,9 @@ export default [{
           </div>
         </div>
       </div>
-      <div class="col-6 mb-4 order-md-first">
+      <div class="col-12 col-md-4 col-lg-6 mb-4 order-md-first">
         <div class="row">
-          <div class="col-6">
+          <div class="col-12 col-xl-6">
             <ul class="list-group">
               <template v-for="(entries,day) in resolved">
                 <li class="list-group-item py-1 list-group-item-info" ><strong>{{day}}</strong></li>
@@ -156,7 +156,7 @@ export default [{
               </template>
             </ul>
           </div>
-          <div class="col-6">
+          <div class="col-12 col-xl-6">
             <ul class="list-group">
             <template v-for="(entries,day) in defined">
             <li class="list-group-item py-1 list-group-item-info" ><strong>{{day}}</strong></li>
