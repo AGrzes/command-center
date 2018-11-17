@@ -31,6 +31,11 @@ Vue.component('progress-chart', {
             time: {
               unit: this.timeUnit || 'day'
             }
+          }],
+          yAxes: [{
+            ticks: {
+              beginAtZero: true
+            }
           }]
       }},
       chartData: {
