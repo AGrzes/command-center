@@ -96,6 +96,18 @@ export default [{
           <div class="col-12 col-xl-6 mb-4">
             <div class="card">
               <div class="card-body">
+                <progress-chart timeUnit="week" :queries="[
+                  {view: 'actionable:resolved',label:'Resolved Weekly',color:'${resolvedColor}',
+                    params: {group: 'week',limit: 12}},
+                  {view: 'actionable:defined',label:'Defined Weekly',color:'${definedColor}',
+                    params: {group: 'week',limit: 12}}]">
+                </progress-chart>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-xl-6 mb-4">
+            <div class="card">
+              <div class="card-body">
                 <progress-chart timeUnit="month" :queries="[
                   {view: 'actionable:resolved',label:'Resolved Monthly',color:'${resolvedColor}',
                     params: {group: 'month',limit: 12}},
@@ -120,18 +132,6 @@ export default [{
           <div class="col-12 col-xl-6 mb-4">
             <div class="card">
               <div class="card-body">
-                <progress-chart timeUnit="week" :queries="[
-                  {view: 'actionable:resolved',label:'Resolved Weekly',color:'${resolvedColor}',
-                    params: {group: 'week',limit: 12}},
-                  {view: 'actionable:defined',label:'Defined Weekly',color:'${definedColor}',
-                    params: {group: 'week',limit: 12}}]">
-                </progress-chart>
-              </div>
-            </div>
-          </div>
-          <div class="col-12 col-xl-6 mb-4">
-            <div class="card">
-              <div class="card-body">
                 <progress-chart timeUnit="month" :queries="[
                   {view: 'projects:resolved',label:'Projects Resolved Monthly',color:'${resolvedColor}',
                     params: {group: 'month',limit: 12}},
@@ -147,6 +147,7 @@ export default [{
         <div class="row">
           <div class="col-12 col-xl-6">
             <ul class="list-group">
+            <li class="list-group-item py-1 list-group-item-primary" ><h3>Resolved</h3></li>
               <template v-for="(entries,day) in resolved">
                 <li class="list-group-item py-1 list-group-item-info" ><strong>{{day}}</strong></li>
                 <li class="list-group-item py-1" v-for="entry in entries">
@@ -158,13 +159,14 @@ export default [{
           </div>
           <div class="col-12 col-xl-6">
             <ul class="list-group">
-            <template v-for="(entries,day) in defined">
-            <li class="list-group-item py-1 list-group-item-info" ><strong>{{day}}</strong></li>
-            <li class="list-group-item py-1" v-for="entry in entries">
-              <span class="badge badge-primary mr-1" v-for="label in filterLabels(entry.labels)">{{label}}</span>
-              {{entry.summary}}
-            </li>
-          </template>
+              <li class="list-group-item py-1 list-group-item-primary" ><h3>Defined</h3></li>
+              <template v-for="(entries,day) in defined">
+                <li class="list-group-item py-1 list-group-item-info" ><strong>{{day}}</strong></li>
+                <li class="list-group-item py-1" v-for="entry in entries">
+                  <span class="badge badge-primary mr-1" v-for="label in filterLabels(entry.labels)">{{label}}</span>
+                  {{entry.summary}}
+                </li>
+              </template>
             </ul>
           </div>
         </div>
