@@ -2,11 +2,14 @@ import * as history from 'connect-history-api-fallback'
 import * as express from 'express'
 import {router as goals} from './goals'
 import {router as progress} from './progress'
+import {router as exercise} from './progress/exercise'
 import {router as reminders} from './reminders'
+
 const app = express()
 
 app.use('/api/goals', goals)
 app.use('/api/reminders', reminders)
+app.use('/api/progress/exercise', exercise)
 app.use('/api/progress', progress)
 app.use(history())
 app.use(express.static('www'))

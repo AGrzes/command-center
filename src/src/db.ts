@@ -8,3 +8,5 @@ export const goals = new PouchDB('http://couchdb:5984/goals')
 export const reminders = new PouchDB<Reminder>('http://couchdb:5984/reminders')
 
 export const progress = new PouchDB<ProgressItem>('http://couchdb:5984/progress')
+
+export const exerciseGoalReport = new PouchDB<ProgressItem>('http://couchdb:5984/exercise-goal-report')
