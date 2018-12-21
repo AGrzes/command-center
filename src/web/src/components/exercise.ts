@@ -30,18 +30,21 @@ function fetch(): Promise<GoalReport> {
 Vue.component('exercise-widget', {
   template: `
 <div>
-  <div class="progress">
+  <div class="progress" v-for="report in reports">
     <div class="progress-bar" role="progressbar"
-      style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
+      :style="{width: report.current/report.target * 100 + '%'}"
+      :aria-valuenow="report.current" aria-valuemin="0" :aria-valuemax="report.targ">
+        {{report.current}}/{{report.target}}
+    </div>
   </div>
 </div>
   `,
   data() {
     return {
-      report: [] as GoalReport[]
+      reports: [] as GoalReport[]
     }
   },
   mounted() {
-    fetch().then((report) => this.report = report)
+    fetch().then((reports) => this.reports = reports)
   }
 })
