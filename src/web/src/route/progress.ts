@@ -81,6 +81,13 @@ export default [{
     <div class="row">
       <div class="col-12 col-md-8 col-lg-6 mb-4">
         <div class="row">
+        <div class="col-12 col-xl-6 mb-4">
+          <div class="card">
+            <div class="card-body">
+              <exercise-widget></exercise-widget>
+            </div>
+          </div>
+        </div>
           <div class="col-12 col-xl-6 mb-4">
             <div class="card">
               <div class="card-body">
