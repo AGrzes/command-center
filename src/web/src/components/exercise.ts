@@ -1,6 +1,7 @@
 import axios from 'axios'
 import * as _ from 'lodash'
 import Vue from 'vue'
+import { Line, mixins } from 'vue-chartjs'
 
 type Activity = 'run' | 'pool' | 'crunches' | 'bike'
 type Unit = 'session' | 'm' | 'km'
@@ -78,17 +79,103 @@ Vue.component('small-exercise-widget', {
 
   }
 })
+Vue.component('big-exercise-widget-chart', {
+  extends: Line,
+  mixins: [mixins.reactiveProp],
+  data() {
+    return {
+      options: {
+        scales: {
+          xAxes: [{
+            type: 'time',
+            time: {
+              unit: 'day'
+            }
+          }],
+          yAxes: [{
+            ticks: {
+              beginAtZero: true
+            }
+          }]
+      }}
+    }
+  },
+  mounted() {
+    this.renderChart(this.chartData, this.options)
+  }
+})
+
+Vue.component('big-exercise-widget', {
+  props: ['report'],
+  template: `
+<div class="mb-2">
+  <div class="d-flex justify-content-center">
+    <p>{{label}}</p>
+  </div>
+  <big-exercise-widget-chart :chartData="chartData"></big-exercise-widget-chart>
+</div>
+  `,
+  computed: {
+    label() {
+      return `${_.startCase(this.report.activity)}`
+    }
+  },
+  data() {
+    return {
+      chartData: {
+        datasets: [{
+          label: `Progres (${this.report.unit})`,
+          cubicInterpolationMode: 'monotone',
+          fill: false,
+          backgroundColor: 'green',
+          borderColor: 'green',
+          borderWidth: 5,
+          data: _(this.report.progress).map((row: ProgressItem) => ({
+            x: row.date,
+            y: row.total
+          })).value()
+        }, {
+          label: `Target (${this.report.unit})`,
+          cubicInterpolationMode: 'monotone',
+          fill: false,
+          backgroundColor: 'red',
+          borderColor: 'red',
+          borderWidth: 5,
+          data: [{x: this.report.startDate, y: 0}, {x: this.report.dueDate, y: this.report.target}]
+        }, {
+          label: `Projected (${this.report.unit})`,
+          cubicInterpolationMode: 'monotone',
+          fill: false,
+          backgroundColor: 'yellow',
+          borderColor: 'yellow',
+          borderWidth: 5,
+          data: [{x: this.report.startDate, y: 0}, {x: this.report.dueDate, y: this.report.projected}]
+        }]
+      }
+    }
+  }
+})
 
 Vue.component('exercise-widget', {
   template: `
 <div>
-  <h3 class="text-center">Exercise</h3>
-  <small-exercise-widget :report="report"  v-for="report in reports" :key="report._id"></small-exercise-widget>
+  <h3 class="text-center" @click="expanded = !expanded">Exercise</h3>
+  <div class="row" v-if="expanded">
+    <div class="col-12 col-md-6" v-for="report in reports" :key="report._id + '-big'">
+      <big-exercise-widget :report="report"></big-exercise-widget>
+    </div>
+  </div>
+  <div class="row" v-else>
+    <div class="col-12" v-for="report in reports" :key="report._id + '-small'">
+      <small-exercise-widget :report="report"></small-exercise-widget>
+    </div>
+  </div>
 </div>
   `,
   data() {
     return {
-      reports: [] as GoalReport[]
+      reports: [] as GoalReport[],
+      expanded: false
     }
   },
   mounted() {
