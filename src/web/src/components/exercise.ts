@@ -186,7 +186,15 @@ Vue.component('exercise-card', {
 Vue.component('exercise-widget', {
   template: `
 <div>
-  <h3 class="text-center" @click="toggle()">Exercise</h3>
+  <div class="row">
+    <h3 class="col-4 offset-4 text-center">Exercise
+    </h3>
+    <div class="col-4 text-right">
+      <button type="button" @click="toggle()" class="btn btn-link">
+        <template v-if="expanded">collapse</template><template v-else>expand</template>
+      </button>
+    </div>
+  </div>
   <div class="row" v-if="expanded">
     <div class="col-12 col-md-6" v-for="report in reports" :key="report._id + '-big'">
       <big-exercise-widget :report="report"></big-exercise-widget>
