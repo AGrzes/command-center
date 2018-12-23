@@ -82,9 +82,14 @@ Vue.component('small-exercise-widget', {
 Vue.component('big-exercise-widget-chart', {
   extends: Line,
   mixins: [mixins.reactiveProp],
+  props: ['title'],
   data() {
     return {
       options: {
+        title: {
+          display: true,
+          text: this.title
+        },
         scales: {
           xAxes: [{
             type: 'time',
@@ -109,10 +114,7 @@ Vue.component('big-exercise-widget', {
   props: ['report'],
   template: `
 <div class="mb-2">
-  <div class="d-flex justify-content-center">
-    <p>{{label}}</p>
-  </div>
-  <big-exercise-widget-chart :chartData="chartData"></big-exercise-widget-chart>
+  <big-exercise-widget-chart :chartData="chartData" :title="label"></big-exercise-widget-chart>
 </div>
   `,
   computed: {
@@ -127,8 +129,8 @@ Vue.component('big-exercise-widget', {
           label: `Progres (${this.report.unit})`,
           cubicInterpolationMode: 'monotone',
           fill: false,
-          backgroundColor: 'green',
-          borderColor: 'green',
+          backgroundColor: '#6eeb83',
+          borderColor: '#6eeb83',
           borderWidth: 5,
           data: _(this.report.progress).map((row: ProgressItem) => ({
             x: row.date,
@@ -138,16 +140,16 @@ Vue.component('big-exercise-widget', {
           label: `Target (${this.report.unit})`,
           cubicInterpolationMode: 'monotone',
           fill: false,
-          backgroundColor: 'red',
-          borderColor: 'red',
+          backgroundColor: '#f74f65',
+          borderColor: '#f74f65',
           borderWidth: 5,
           data: [{x: this.report.startDate, y: 0}, {x: this.report.dueDate, y: this.report.target}]
         }, {
           label: `Projected (${this.report.unit})`,
           cubicInterpolationMode: 'monotone',
           fill: false,
-          backgroundColor: 'yellow',
-          borderColor: 'yellow',
+          backgroundColor: '#ffbc42',
+          borderColor: '#ffbc42',
           borderWidth: 5,
           data: [{x: this.report.startDate, y: 0}, {x: this.report.dueDate, y: this.report.projected}]
         }]
