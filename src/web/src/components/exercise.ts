@@ -158,10 +158,35 @@ Vue.component('big-exercise-widget', {
   }
 })
 
+Vue.component('exercise-card', {
+  template: `
+<div class="col-12 mb-4" :class="{'col-xl-12':expanded, 'col-xl-6':!expanded}">
+  <div class="card">
+    <div class="card-body">
+      <exercise-widget @expand="expand" @collapse="collapse"></exercise-widget>
+    </div>
+  </div>
+</div>
+  `,
+  data() {
+    return {
+      expanded: false
+    }
+  },
+  methods: {
+    collapse() {
+      this.expanded = false
+    },
+    expand() {
+      this.expanded = true
+    }
+  }
+})
+
 Vue.component('exercise-widget', {
   template: `
 <div>
-  <h3 class="text-center" @click="expanded = !expanded">Exercise</h3>
+  <h3 class="text-center" @click="toggle()">Exercise</h3>
   <div class="row" v-if="expanded">
     <div class="col-12 col-md-6" v-for="report in reports" :key="report._id + '-big'">
       <big-exercise-widget :report="report"></big-exercise-widget>
@@ -174,6 +199,16 @@ Vue.component('exercise-widget', {
   </div>
 </div>
   `,
+  methods: {
+    toggle() {
+      this.expanded = !this.expanded
+      if (this.expanded) {
+        this.$emit('expand')
+      } else {
+        this.$emit('collapse')
+      }
+    }
+  },
   data() {
     return {
       reports: [] as GoalReport[],
