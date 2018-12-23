@@ -114,26 +114,38 @@ Vue.component('big-exercise-widget', {
   props: ['report'],
   template: `
 <div class="mb-2">
-  <big-exercise-widget-chart :chartData="chartData" :title="label"></big-exercise-widget-chart>
-  <button type="button" @click="toggleTable()" class="btn btn-link">
-    <template v-if="showTable">hide table</template><template v-else>show table</template>
-  </button>
-  <table class="table table-striped" v-if="showTable">
-    <thead>
-      <tr>
-        <th>Date</th>
-        <th>Increment</th>
-        <th>Total</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr v-for="row in report.progress">
-        <td>{{row.date}}</td>
-        <td>{{row.increment}}</td>
-        <td>{{row.total}}</td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="row">
+    <div class="col-12">
+      <big-exercise-widget-chart :chartData="chartData" :title="label"></big-exercise-widget-chart>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <button type="button" @click="toggleTable()" class="btn btn-secondary btn-block">
+        <template v-if="showTable">hide table</template><template v-else>show table</template>
+      </button>
+    </div>
+  </div>
+  <div class="row mt-4" v-if="showTable">
+    <div class="col-12">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Increment</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="row in report.progress">
+            <td>{{row.date}}</td>
+            <td>{{row.increment}}</td>
+            <td>{{row.total}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
   `,
   computed: {
@@ -215,7 +227,7 @@ Vue.component('exercise-widget', {
     <h3 class="col-4 offset-4 text-center">Exercise
     </h3>
     <div class="col-4 text-right">
-      <button type="button" @click="toggle()" class="btn btn-link">
+      <button type="button" @click="toggle()" class="btn btn-secondary">
         <template v-if="expanded">collapse</template><template v-else>expand</template>
       </button>
     </div>
