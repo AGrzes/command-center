@@ -115,11 +115,35 @@ Vue.component('big-exercise-widget', {
   template: `
 <div class="mb-2">
   <big-exercise-widget-chart :chartData="chartData" :title="label"></big-exercise-widget-chart>
+  <button type="button" @click="toggleTable()" class="btn btn-link">
+    <template v-if="showTable">hide table</template><template v-else>show table</template>
+  </button>
+  <table class="table table-striped" v-if="showTable">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Increment</th>
+        <th>Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="row in report.progress">
+        <td>{{row.date}}</td>
+        <td>{{row.increment}}</td>
+        <td>{{row.total}}</td>
+      </tr>
+    </tbody>
+  </table>
 </div>
   `,
   computed: {
     label() {
       return `${_.startCase(this.report.activity)}`
+    }
+  },
+  methods: {
+    toggleTable() {
+      this.showTable = !this.showTable
     }
   },
   data() {
@@ -153,7 +177,8 @@ Vue.component('big-exercise-widget', {
           borderWidth: 5,
           data: [{x: this.report.startDate, y: 0}, {x: this.report.dueDate, y: this.report.projected}]
         }]
-      }
+      },
+      showTable: false
     }
   }
 })
