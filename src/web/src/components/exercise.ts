@@ -232,9 +232,24 @@ Vue.component('exercise-widget', {
       </button>
     </div>
   </div>
-  <div class="row" v-if="expanded">
-    <div class="col-12 col-md-6" v-for="report in reports" :key="report._id + '-big'">
-      <big-exercise-widget :report="report"></big-exercise-widget>
+  <div v-if="expanded">
+    <div class="row" >
+      <ul class="nav nav-tabs col-12">
+        <li class="nav-item">
+          <a class="nav-link" :class="{active: tab==='current'}" @click="tab = 'current'">Current</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" :class="{active: tab==='archived'}" @click="tab = 'archived'">Archived</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" :class="{active: tab==='future'}" @click="tab = 'future'">Future</a>
+        </li>
+      </ul>
+    </div>
+    <div class="row" v-if="tab==='current'">
+      <div class="col-12 col-md-6" v-for="report in reports" :key="report._id + '-big'">
+        <big-exercise-widget :report="report"></big-exercise-widget>
+      </div>
     </div>
   </div>
   <div class="row" v-else>
@@ -257,7 +272,8 @@ Vue.component('exercise-widget', {
   data() {
     return {
       reports: [] as GoalReport[],
-      expanded: false
+      expanded: false,
+      tab: 'current'
     }
   },
   mounted() {
