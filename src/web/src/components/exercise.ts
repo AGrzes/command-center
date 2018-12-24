@@ -252,6 +252,32 @@ Vue.component('exercise-widget', {
         <big-exercise-widget :report="report"></big-exercise-widget>
       </div>
     </div>
+    <div class="row" v-if="tab==='archived'">
+      <div class="col-12">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Start Date</th>
+              <th>Due Date</th>
+              <th>Activity</th>
+              <th>Target</th>
+              <th>Result</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="report in archived">
+              <td>{{report.startDate}}</td>
+              <td>{{report.dueDate}}</td>
+              <td>{{report.activity}}</td>
+              <td>{{report.target}} {{report.unit}}</td>
+              <td>{{report.current}} {{report.unit}}</td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
     <div class="row" v-if="tab==='future'">
       <div class="col-12">
         <table class="table table-striped">
