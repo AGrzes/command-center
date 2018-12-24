@@ -252,6 +252,28 @@ Vue.component('exercise-widget', {
         <big-exercise-widget :report="report"></big-exercise-widget>
       </div>
     </div>
+    <div class="row" v-if="tab==='future'">
+      <div class="col-12">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Start Date</th>
+              <th>Due Date</th>
+              <th>Activity</th>
+              <th>Target</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="report in future">
+              <td>{{report.startDate}}</td>
+              <td>{{report.dueDate}}</td>
+              <td>{{report.activity}}</td>
+              <td>{{report.target}} {{report.unit}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
   <div class="row" v-else>
     <div class="col-12" v-for="report in current" :key="report._id + '-small'">
