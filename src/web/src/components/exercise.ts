@@ -253,6 +253,24 @@ Vue.component('exercise-widget', {
       </div>
     </div>
     <div class="row" v-if="tab==='archived'">
+    <div class="modal" tabindex="-1" role="dialog" ref="detailsModal">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Details</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <big-exercise-widget :report="reportToShow" v-if="reportToShow"></big-exercise-widget>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
       <div class="col-12">
         <table class="table table-striped">
           <thead>
@@ -272,7 +290,7 @@ Vue.component('exercise-widget', {
               <td>{{report.activity}}</td>
               <td>{{report.target}} {{report.unit}}</td>
               <td>{{report.current}} {{report.unit}}</td>
-              <td></td>
+              <td><button type="button" class="btn btn-primary" @click="details(report)">Details</button></td>
             </tr>
           </tbody>
         </table>
@@ -316,6 +334,10 @@ Vue.component('exercise-widget', {
       } else {
         this.$emit('collapse')
       }
+    },
+    details(report: GoalReport) {
+      this.reportToShow = report
+      $(this.$refs.detailsModal).modal()
     }
   },
   data() {
@@ -324,7 +346,8 @@ Vue.component('exercise-widget', {
       future: [] as GoalReport[],
       archived: [] as GoalReport[],
       expanded: false,
-      tab: 'current'
+      tab: 'current',
+      reportToShow: null
     }
   },
   mounted() {
