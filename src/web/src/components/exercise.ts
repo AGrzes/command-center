@@ -1,5 +1,6 @@
 import axios from 'axios'
 import * as _ from 'lodash'
+import moment = require('moment')
 import Vue from 'vue'
 import { Line, mixins } from 'vue-chartjs'
 
@@ -25,7 +26,7 @@ interface GoalReport extends Goal {
   progress: ProgressItem[]
 }
 
-function fetch(): Promise<GoalReport> {
+function fetch(): Promise<GoalReport[]> {
   return axios.get('/api/progress/exercise').then((response) => response.data)
 }
 
@@ -247,13 +248,13 @@ Vue.component('exercise-widget', {
       </ul>
     </div>
     <div class="row" v-if="tab==='current'">
-      <div class="col-12 col-md-6" v-for="report in reports" :key="report._id + '-big'">
+      <div class="col-12 col-md-6" v-for="report in current" :key="report._id + '-big'">
         <big-exercise-widget :report="report"></big-exercise-widget>
       </div>
     </div>
   </div>
   <div class="row" v-else>
-    <div class="col-12" v-for="report in reports" :key="report._id + '-small'">
+    <div class="col-12" v-for="report in current" :key="report._id + '-small'">
       <small-exercise-widget :report="report"></small-exercise-widget>
     </div>
   </div>
@@ -271,12 +272,19 @@ Vue.component('exercise-widget', {
   },
   data() {
     return {
-      reports: [] as GoalReport[],
+      current: [] as GoalReport[],
+      future: [] as GoalReport[],
+      archived: [] as GoalReport[],
       expanded: false,
       tab: 'current'
     }
   },
   mounted() {
-    fetch().then((reports) => this.reports = reports)
+    fetch().then((reports) => {
+      const now = moment()
+      this.current = _.filter(reports, (report: GoalReport) => !report.archived && now.isSameOrAfter(report.startDate))
+      this.archived = _.filter(reports, (report: GoalReport) => report.archived)
+      this.future = _.filter(reports, (report: GoalReport) => !report.archived && now.isBefore(report.startDate))
+    })
   }
 })
