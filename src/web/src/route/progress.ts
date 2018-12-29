@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { ChartScales, ChartTitleOptions, TickOptions } from 'chart.js'
 import * as _ from 'lodash'
 import moment = require('moment')
 import Vue from 'vue'
@@ -14,6 +15,12 @@ interface Query {
   }
 }
 
+interface ChartSettings {
+  queries: Query[]
+  scales?: ChartScales
+  title?: ChartTitleOptions
+}
+
 const colors = ['#04e762', '#e3170a', '#eac435', '#00a6a6', '#ec0868']
 function nthColor(n: number): string {
   return colors[n % colors.length]
@@ -22,35 +29,28 @@ function nthColor(n: number): string {
 Vue.component('progress-chart', {
   extends: Line,
   mixins: [mixins.reactiveData],
-  props: ['queries', 'timeUnit'],
+  props: ['queries', 'scales', 'title'],
   data() {
+    const scales: ChartScales = this.scales || {
+      xAxes: [{
+        type: 'time',
+        time: {
+          unit: 'day'
+        },
+        ticks: {
+          source: 'data'
+        }
+      }],
+      yAxes: [{
+        ticks: {
+          beginAtZero: true
+        }
+      }]
+    }
     return {
       options: {
-        scales: {
-          xAxes: [{
-            type: 'time',
-            time: {
-              unit: this.timeUnit || 'day'
-            },
-            ticks: {
-              source: 'data'
-            }
-          }],
-          yAxes: [{
-            id: 'actionable',
-            ticks: {
-              beginAtZero: true,
-              precision: 0
-            }
-          }, {
-            id: 'projects',
-            position: 'right',
-            ticks: {
-              beginAtZero: true,
-              precision: 0
-            }
-          }]
-      }},
+        scales
+      },
       chartData: {
         datasets: []
       }
@@ -94,7 +94,7 @@ export default [{
           <div class="col-12 col-xl-6 mb-4" v-for="chartConfig in chartConfigs">
             <div class="card">
               <div class="card-body">
-                <progress-chart :queries="chartConfig">
+                <progress-chart :queries="chartConfig.queries" :scales="chartConfig.scales">
                 </progress-chart>
               </div>
             </div>
@@ -150,14 +150,39 @@ export default [{
     data(): {
       defined: ProgressItem[],
       resolved: ProgressItem[],
-      chartConfigs: Query[][]
+      chartConfigs: ChartSettings[]
     } {
-      const chartConfigs: Query[][] = _.map([
+      const scales: ChartScales = {
+        xAxes: [{
+          type: 'time',
+          time: {
+            unit: this.timeUnit || 'day'
+          },
+          ticks: {
+            source: 'data'
+          }
+        }],
+        yAxes: [{
+          id: 'actionable',
+          ticks: {
+            beginAtZero: true,
+            precision: 0
+          } as TickOptions
+        }, {
+          id: 'projects',
+          position: 'right',
+          ticks: {
+            beginAtZero: true,
+            precision: 0
+          } as TickOptions
+        }]
+      }
+      const chartConfigs: ChartSettings[] = _.map([
         {group: 'day', limit: 14},
         {group: 'month', limit: 12},
         {group: 'quarter', limit: 12}],
       (params) =>
-        _.map([
+        ({queries: _.map([
           {view: 'actionable:defined', label: 'Defined Actions', color: '#ff3845', additional: {yAxisID: 'actionable'}},
           {view: 'actionable:resolved', label: 'Resolved Actions', color: '#37ff8b',
             additional: {yAxisID: 'actionable'}},
@@ -166,7 +191,8 @@ export default [{
           {view: 'projects:resolved', label: 'Resolved Projects', color: '#c5cedd',
             additional: {yAxisID: 'projects', borderWidth: 2}}
         ],
-          (queryBase) => _.assign({}, queryBase, {params}))
+          (queryBase) => _.assign({}, queryBase, {params})),
+          scales})
       )
       return {
         defined: [],
