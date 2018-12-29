@@ -40,21 +40,26 @@ Vue.component('small-exercise-widget', {
     <p>{{report.dueDate}}</p>
   </div>
   <div class="progress" >
-    <div class="progress-bar" role="progressbar"
-      :style="{width: basePercent}"
+    <div class="progress-bar" role="progressbar" ref="base"
+      :style="{width: basePercent}" :title="base.toFixed(0) + ' ' +report.unit"
       :aria-valuenow="base" aria-valuemin="0" :aria-valuemax="report.targ">
     </div>
-    <div class="progress-bar bg-warning" role="progressbar"
-      :style="{width: underPercent}"
+    <div class="progress-bar bg-success" role="progressbar" ref="under"
+      :style="{width: underPercent}" :title="under.toFixed(0) + ' ' + report.unit"
       :aria-valuenow="base" aria-valuemin="0" :aria-valuemax="report.targ">
     </div>
-    <div class="progress-bar bg-success" role="progressbar"
-      :style="{width: overPercent}"
+    <div class="progress-bar bg-warning" role="progressbar" ref="over"
+      :style="{width: overPercent}" :title="over.toFixed(0) + ' ' + report.unit"
       :aria-valuenow="base" aria-valuemin="0" :aria-valuemax="report.targ">
     </div>
   </div>
 </div>
   `,
+  mounted() {
+    $(this.$refs.base).tooltip()
+    $(this.$refs.under).tooltip()
+    $(this.$refs.over).tooltip()
+  },
   computed: {
     label() {
       return `${_.startCase(this.report.activity)} ${this.report.current}/${this.report.target} ${this.report.unit}`
@@ -72,10 +77,10 @@ Vue.component('small-exercise-widget', {
       return this.base / this.report.target * 100 + '%'
     },
     overPercent() {
-      return this.under / this.report.target * 100 + '%'
+      return this.over / this.report.target * 100 + '%'
     },
     underPercent() {
-      return this.over / this.report.target * 100 + '%'
+      return this.under / this.report.target * 100 + '%'
     }
 
   }
