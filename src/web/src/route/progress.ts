@@ -83,6 +83,20 @@ function defined(): Promise<ProgressItem[]> {
 function resolved(): Promise<ProgressItem[]> {
   return axios.get('/api/progress/resolved').then((response) => response.data)
 }
+
+function mapProgressItem(item: ProgressItem): ProgressItem {
+  const supported = _.find(item.related, ({relation}) => relation === 'supports')
+  if (supported) {
+    item.parent = supported.target.summary
+  }
+
+  return item
+}
+
+function mapProgressItems(items: ProgressItem[]) {
+  return _(items).map(mapProgressItem).groupBy((entry) => moment(entry.defined).format('YYYY-MM-DD')).value()
+}
+
 export default [{
   name: 'progress',
   path: 'progress',
@@ -123,7 +137,7 @@ export default [{
                 <li class="list-group-item py-1 list-group-item-info" ><strong>{{day}}</strong></li>
                 <li class="list-group-item py-1" v-for="entry in entries">
                   <span class="badge badge-primary mr-1" v-for="label in filterLabels(entry.labels)">{{label}}</span>
-                  {{entry.summary}}
+                  {{entry.summary}} <small v-if="entry.parent">{{entry.parent}}<small>
                 </li>
               </template>
             </ul>
@@ -135,17 +149,17 @@ export default [{
     beforeRouteEnter(to, from, next) {
       Promise.all([defined(), resolved()]).then(([definedEntries, resolvedEntries]) => {
         next((vm) => {
-          vm.defined = _.groupBy(definedEntries, (entry) => moment(entry.defined).format('YYYY-MM-DD'))
-          vm.resolved = _.groupBy(resolvedEntries, (entry) => moment(entry.resolved).format('YYYY-MM-DD'))
+          vm.defined = mapProgressItems(definedEntries)
+          vm.resolved = mapProgressItems(resolvedEntries)
         })
       })
     },
     beforeRouteUpdate(to, from, next) {
       defined().then((progress) => {
-        this.defined = progress
+        this.defined = mapProgressItems(progress)
       })
       resolved().then((entries) => {
-        this.defined = entries
+        this.defined = mapProgressItems(entries)
       })
     },
     data(): {
