@@ -37,6 +37,7 @@
     "vue-router": "^3.0.1"
   },
   "devDependencies": {
+    "@fortawesome/fontawesome-free": "^5.6.3",
     "@types/bootstrap": "^4.1.2",
     "@types/chart.js": "^2.7.40",
     "@types/jquery": "^3.3.6",

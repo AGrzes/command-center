@@ -40,21 +40,26 @@ Vue.component('small-exercise-widget', {
     <p>{{report.dueDate}}</p>
   </div>
   <div class="progress" >
-    <div class="progress-bar" role="progressbar"
-      :style="{width: basePercent}"
+    <div class="progress-bar" role="progressbar" ref="base"
+      :style="{width: basePercent}" :title="base.toFixed(0) + ' ' +report.unit"
       :aria-valuenow="base" aria-valuemin="0" :aria-valuemax="report.targ">
     </div>
-    <div class="progress-bar bg-warning" role="progressbar"
-      :style="{width: underPercent}"
+    <div class="progress-bar bg-success" role="progressbar" ref="under"
+      :style="{width: underPercent}" :title="under.toFixed(0) + ' ' + report.unit"
       :aria-valuenow="base" aria-valuemin="0" :aria-valuemax="report.targ">
     </div>
-    <div class="progress-bar bg-success" role="progressbar"
-      :style="{width: overPercent}"
+    <div class="progress-bar bg-warning" role="progressbar" ref="over"
+      :style="{width: overPercent}" :title="over.toFixed(0) + ' ' + report.unit"
       :aria-valuenow="base" aria-valuemin="0" :aria-valuemax="report.targ">
     </div>
   </div>
 </div>
   `,
+  mounted() {
+    $(this.$refs.base).tooltip()
+    $(this.$refs.under).tooltip()
+    $(this.$refs.over).tooltip()
+  },
   computed: {
     label() {
       return `${_.startCase(this.report.activity)} ${this.report.current}/${this.report.target} ${this.report.unit}`
@@ -72,10 +77,10 @@ Vue.component('small-exercise-widget', {
       return this.base / this.report.target * 100 + '%'
     },
     overPercent() {
-      return this.under / this.report.target * 100 + '%'
+      return this.over / this.report.target * 100 + '%'
     },
     underPercent() {
-      return this.over / this.report.target * 100 + '%'
+      return this.under / this.report.target * 100 + '%'
     }
 
   }
@@ -133,15 +138,15 @@ Vue.component('big-exercise-widget', {
         <thead>
           <tr>
             <th>Date</th>
-            <th>Increment</th>
+            <th>Increment </th>
             <th>Total</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="row in report.progress">
             <td>{{row.date}}</td>
-            <td>{{row.increment}}</td>
-            <td>{{row.total}}</td>
+            <td>{{row.increment}} {{report.unit}}</td>
+            <td>{{row.total}} {{report.unit}}</td>
           </tr>
         </tbody>
       </table>
@@ -228,8 +233,13 @@ Vue.component('exercise-widget', {
     <h3 class="col-4 offset-4 text-center">Exercise
     </h3>
     <div class="col-4 text-right">
-      <button type="button" @click="toggle()" class="btn btn-secondary">
-        <template v-if="expanded">collapse</template><template v-else>expand</template>
+      <button type="button" @click="toggle()" class="btn btn-light">
+        <template v-if="expanded">
+          <i class="fas fa-minus-square"></i>
+        </template>
+        <template v-else>
+          <i class="fas fa-plus-square"></i>
+        </template>
       </button>
     </div>
   </div>
