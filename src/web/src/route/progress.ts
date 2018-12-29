@@ -8,6 +8,7 @@ interface Query {
   view: string
   label?: string
   color?: string
+  additional?: any
   params: {
     [key: string]: string | number | boolean
   }
@@ -36,8 +37,17 @@ Vue.component('progress-chart', {
             }
           }],
           yAxes: [{
+            id: 'actionable',
             ticks: {
-              beginAtZero: true
+              beginAtZero: true,
+              precision: 0
+            }
+          }, {
+            id: 'projects',
+            position: 'right',
+            ticks: {
+              beginAtZero: true,
+              precision: 0
             }
           }]
       }},
@@ -59,7 +69,8 @@ Vue.component('progress-chart', {
           data: _(data.rows).reverse().map((row) => ({
             x: row.key,
             y: row.value
-          })).value()
+          })).value(),
+          ...(query.additional || {})
         }]
       }))
   }
@@ -71,8 +82,6 @@ function defined(): Promise<ProgressItem[]> {
 function resolved(): Promise<ProgressItem[]> {
   return axios.get('/api/progress/resolved').then((response) => response.data)
 }
-const resolvedColor = '#37ff8b'
-const definedColor = '#ff3845'
 export default [{
   name: 'progress',
   path: 'progress',
@@ -82,62 +91,10 @@ export default [{
       <div class="col-12 col-md-8 col-lg-6 mb-4">
         <div class="row">
           <exercise-card></exercise-card>
-          <div class="col-12 col-xl-6 mb-4">
+          <div class="col-12 col-xl-6 mb-4" v-for="chartConfig in chartConfigs">
             <div class="card">
               <div class="card-body">
-                <progress-chart :queries="[
-                  {view: 'actionable:resolved',label:'Resolved Daily',color:'${resolvedColor}',
-                    params: {group: 'day',limit: 14}},
-                  {view: 'actionable:defined',label:'Defined Daily',color:'${definedColor}',
-                    params: {group: 'day',limit: 14}}]">
-                </progress-chart>
-              </div>
-            </div>
-          </div>
-          <div class="col-12 col-xl-6 mb-4">
-            <div class="card">
-              <div class="card-body">
-                <progress-chart timeUnit="week" :queries="[
-                  {view: 'actionable:resolved',label:'Resolved Weekly',color:'${resolvedColor}',
-                    params: {group: 'week',limit: 12}},
-                  {view: 'actionable:defined',label:'Defined Weekly',color:'${definedColor}',
-                    params: {group: 'week',limit: 12}}]">
-                </progress-chart>
-              </div>
-            </div>
-          </div>
-          <div class="col-12 col-xl-6 mb-4">
-            <div class="card">
-              <div class="card-body">
-                <progress-chart timeUnit="month" :queries="[
-                  {view: 'actionable:resolved',label:'Resolved Monthly',color:'${resolvedColor}',
-                    params: {group: 'month',limit: 12}},
-                  {view: 'actionable:defined',label:'Defined Monthly',color:'${definedColor}',
-                    params: {group: 'month',limit: 12}}]">
-                </progress-chart>
-              </div>
-            </div>
-          </div>
-          <div class="col-12 col-xl-6 mb-4">
-            <div class="card">
-              <div class="card-body">
-                <progress-chart timeUnit="quarter" :queries="[
-                  {view: 'actionable:resolved',label:'Resolved Quarterly',color:'${resolvedColor}',
-                    params: {group: 'quarter',limit: 12}},
-                  {view: 'actionable:defined',label:'Defined Quarterly',color:'${definedColor}',
-                    params: {group: 'quarter',limit: 12}}]">
-                </progress-chart>
-              </div>
-            </div>
-          </div>
-          <div class="col-12 col-xl-6 mb-4">
-            <div class="card">
-              <div class="card-body">
-                <progress-chart timeUnit="month" :queries="[
-                  {view: 'projects:resolved',label:'Projects Resolved Monthly',color:'${resolvedColor}',
-                    params: {group: 'month',limit: 12}},
-                  {view: 'projects:defined',label:' ProjectsDefined Monthly',color:'#ea526f',
-                    params: {group: 'month',limit: 12}}]">
+                <progress-chart :queries="chartConfig">
                 </progress-chart>
               </div>
             </div>
@@ -192,11 +149,29 @@ export default [{
     },
     data(): {
       defined: ProgressItem[],
-      resolved: ProgressItem[]
+      resolved: ProgressItem[],
+      chartConfigs: Query[][]
     } {
+      const chartConfigs: Query[][] = _.map([
+        {group: 'day', limit: 14},
+        {group: 'month', limit: 12},
+        {group: 'quarter', limit: 12}],
+      (params) =>
+        _.map([
+          {view: 'actionable:defined', label: 'Defined Actions', color: '#ff3845', additional: {yAxisID: 'actionable'}},
+          {view: 'actionable:resolved', label: 'Resolved Actions', color: '#37ff8b',
+            additional: {yAxisID: 'actionable'}},
+          {view: 'projects:defined', label: 'Defined Projects', color: '#fcf2a4',
+            additional: {yAxisID: 'projects', borderWidth: 2}},
+          {view: 'projects:resolved', label: 'Resolved Projects', color: '#c5cedd',
+            additional: {yAxisID: 'projects', borderWidth: 2}}
+        ],
+          (queryBase) => _.assign({}, queryBase, {params}))
+      )
       return {
         defined: [],
-        resolved: []
+        resolved: [],
+        chartConfigs
       }
     },
     methods: {
