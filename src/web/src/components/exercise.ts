@@ -133,15 +133,15 @@ Vue.component('big-exercise-widget', {
         <thead>
           <tr>
             <th>Date</th>
-            <th>Increment</th>
+            <th>Increment </th>
             <th>Total</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="row in report.progress">
             <td>{{row.date}}</td>
-            <td>{{row.increment}}</td>
-            <td>{{row.total}}</td>
+            <td>{{row.increment}} {{report.unit}}</td>
+            <td>{{row.total}} {{report.unit}}</td>
           </tr>
         </tbody>
       </table>
