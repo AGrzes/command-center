@@ -49,7 +49,8 @@ Vue.component('progress-chart', {
     }
     return {
       options: {
-        scales
+        scales,
+        title: this.title
       },
       chartData: {
         datasets: []
@@ -94,7 +95,7 @@ export default [{
           <div class="col-12 col-xl-6 mb-4" v-for="chartConfig in chartConfigs">
             <div class="card">
               <div class="card-body">
-                <progress-chart :queries="chartConfig.queries" :scales="chartConfig.scales">
+                <progress-chart :queries="chartConfig.queries" :scales="chartConfig.scales" :title="chartConfig.title">
                 </progress-chart>
               </div>
             </div>
@@ -156,7 +157,7 @@ export default [{
         xAxes: [{
           type: 'time',
           time: {
-            unit: this.timeUnit || 'day'
+            unit: 'day'
           },
           ticks: {
             source: 'data'
@@ -178,10 +179,10 @@ export default [{
         }]
       }
       const chartConfigs: ChartSettings[] = _.map([
-        {group: 'day', limit: 14},
-        {group: 'month', limit: 12},
-        {group: 'quarter', limit: 12}],
-      (params) =>
+        {params: { group: 'day', limit: 14}, title: 'Daily'},
+        {params: { group: 'month', limit: 12}, title: 'Monthly'},
+        {params: { group: 'quarter', limit: 12}, title: 'Quarterly'}],
+      ({params, title}) =>
         ({queries: _.map([
           {view: 'actionable:defined', label: 'Defined Actions', color: '#ff3845', additional: {yAxisID: 'actionable'}},
           {view: 'actionable:resolved', label: 'Resolved Actions', color: '#37ff8b',
@@ -192,7 +193,12 @@ export default [{
             additional: {yAxisID: 'projects', borderWidth: 2}}
         ],
           (queryBase) => _.assign({}, queryBase, {params})),
-          scales})
+          scales,
+          title: {
+            text: title,
+            display: true
+          }
+        })
       )
       return {
         defined: [],
