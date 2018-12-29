@@ -233,8 +233,13 @@ Vue.component('exercise-widget', {
     <h3 class="col-4 offset-4 text-center">Exercise
     </h3>
     <div class="col-4 text-right">
-      <button type="button" @click="toggle()" class="btn btn-secondary">
-        <template v-if="expanded">collapse</template><template v-else>expand</template>
+      <button type="button" @click="toggle()" class="btn btn-light">
+        <template v-if="expanded">
+          <i class="fas fa-minus-square"></i>
+        </template>
+        <template v-else>
+          <i class="fas fa-plus-square"></i>
+        </template>
       </button>
     </div>
   </div>
