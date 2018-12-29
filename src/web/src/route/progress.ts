@@ -89,7 +89,10 @@ function mapProgressItem(item: ProgressItem): ProgressItem {
   if (supported) {
     item.parent = supported.target.summary
   }
-
+  const repository = _.find(item.related, ({relation}) => relation === 'repository')
+  if (repository) {
+    item.parent = repository.target.summary
+  }
   return item
 }
 
@@ -125,7 +128,7 @@ export default [{
                 <li class="list-group-item py-1 list-group-item-info" ><strong>{{day}}</strong></li>
                 <li class="list-group-item py-1" v-for="entry in entries">
                   <span class="badge badge-primary mr-1" v-for="label in filterLabels(entry.labels)">{{label}}</span>
-                  {{entry.summary}}
+                  {{entry.summary}} <small v-if="entry.parent">{{entry.parent}}<small>
                 </li>
               </template>
             </ul>
