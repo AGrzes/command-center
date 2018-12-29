@@ -36,11 +36,18 @@ router.get('/', (req, res) => {
       const expected = (target / dueDate.diff(startDate, 'days')) * today.diff(startDate, 'days')
       const projected = (current / today.diff(startDate, 'days')) * dueDate.diff(startDate, 'days')
       const progress = report.doc.progress
-      if (progress[0] && !startDate.isSame(progress[0].date, 'day')) {
+      if (progress && progress[0] && !startDate.isSame(progress[0].date, 'day')) {
         progress.unshift({
           date: startDate.format('YYYY-MM-DD'),
           increment: 0,
           total: 0
+        })
+      }
+      if (progress && progress[progress.length - 1] && !today.isSame(progress[progress.length - 1].date, 'day')) {
+        progress.push({
+          date: today.format('YYYY-MM-DD'),
+          increment: 0,
+          total: current
         })
       }
       return {
