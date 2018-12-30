@@ -96,8 +96,8 @@ function mapProgressItem(item: ProgressItem): ProgressItem {
   return item
 }
 
-function mapProgressItems(items: ProgressItem[]) {
-  return _(items).map(mapProgressItem).groupBy((entry) => moment(entry.defined).format('YYYY-MM-DD')).value()
+function mapProgressItems(items: ProgressItem[], sortProperty: string ) {
+  return _(items).map(mapProgressItem).groupBy((entry) => moment(entry[sortProperty]).format('YYYY-MM-DD')).value()
 }
 
 export default [{
@@ -128,7 +128,7 @@ export default [{
                 <li class="list-group-item py-1 list-group-item-info" ><strong>{{day}}</strong></li>
                 <li class="list-group-item py-1" v-for="entry in entries">
                   <span class="badge badge-primary mr-1" v-for="label in filterLabels(entry.labels)">{{label}}</span>
-                  {{entry.summary}} <small v-if="entry.parent">{{entry.parent}}<small>
+                  {{entry.summary}} <small v-if="entry.parent">{{entry.parent}}</small>
                 </li>
               </template>
             </ul>
@@ -140,7 +140,7 @@ export default [{
                 <li class="list-group-item py-1 list-group-item-info" ><strong>{{day}}</strong></li>
                 <li class="list-group-item py-1" v-for="entry in entries">
                   <span class="badge badge-primary mr-1" v-for="label in filterLabels(entry.labels)">{{label}}</span>
-                  {{entry.summary}} <small v-if="entry.parent">{{entry.parent}}<small>
+                  {{entry.summary}} <small v-if="entry.parent">{{entry.parent}}</small>
                 </li>
               </template>
             </ul>
@@ -152,17 +152,17 @@ export default [{
     beforeRouteEnter(to, from, next) {
       Promise.all([defined(), resolved()]).then(([definedEntries, resolvedEntries]) => {
         next((vm) => {
-          vm.defined = mapProgressItems(definedEntries)
-          vm.resolved = mapProgressItems(resolvedEntries)
+          vm.defined = mapProgressItems(definedEntries, 'defined')
+          vm.resolved = mapProgressItems(resolvedEntries, 'resolved')
         })
       })
     },
     beforeRouteUpdate(to, from, next) {
       defined().then((progress) => {
-        this.defined = mapProgressItems(progress)
+        this.defined = mapProgressItems(progress, 'defined')
       })
       resolved().then((entries) => {
-        this.defined = mapProgressItems(entries)
+        this.defined = mapProgressItems(entries, 'resolved')
       })
     },
     data(): {
