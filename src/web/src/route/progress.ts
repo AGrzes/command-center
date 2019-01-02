@@ -197,6 +197,7 @@ export default [{
       }
       const chartConfigs: ChartSettings[] = _.map([
         {params: { group: 'day', limit: 14}, title: 'Daily'},
+        {params: { group: 'week', limit: 14}, title: 'Weekly'},
         {params: { group: 'month', limit: 12}, title: 'Monthly'},
         {params: { group: 'quarter', limit: 12}, title: 'Quarterly'}],
       ({params, title}) =>
