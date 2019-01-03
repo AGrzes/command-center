@@ -28,9 +28,9 @@ interface GoalReport extends Goal {
 router.get('/', (req, res) => {
   exerciseGoalReport.allDocs<GoalReport>({include_docs: true}).then((response) => {
     res.send(_.map(response.rows, (report) => {
-      const today = moment()
       const startDate = moment(report.doc.startDate)
       const dueDate = moment(report.doc.dueDate)
+      const today = moment.min(moment(), dueDate)
       const current = (_.last(report.doc.progress) || {total: 0}).total
       const target = report.doc.target
       const expected = (target / dueDate.diff(startDate, 'days')) * today.diff(startDate, 'days')
