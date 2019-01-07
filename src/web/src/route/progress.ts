@@ -181,34 +181,21 @@ export default [{
           }
         }],
         yAxes: [{
-          id: 'actionable',
-          ticks: {
-            beginAtZero: true,
-            precision: 0
-          } as TickOptions
-        }, {
-          id: 'projects',
-          position: 'right',
           ticks: {
             beginAtZero: true,
             precision: 0
           } as TickOptions
         }]
       }
-      const chartConfigs: ChartSettings[] = _.map([
-        {params: { group: 'day', limit: 14}, title: 'Daily'},
-        {params: { group: 'week', limit: 14}, title: 'Weekly'},
-        {params: { group: 'month', limit: 12}, title: 'Monthly'},
-        {params: { group: 'quarter', limit: 12}, title: 'Quarterly'}],
+      const chartConfigs: ChartSettings[] = [..._.map([
+        {params: { group: 'day', limit: 14}, title: 'Daily Actions'},
+        {params: { group: 'week', limit: 14}, title: 'Weekly Actions'},
+        {params: { group: 'month', limit: 12}, title: 'Monthly Actions'},
+        {params: { group: 'quarter', limit: 12}, title: 'Quarterly Actions'}],
       ({params, title}) =>
         ({queries: _.map([
-          {view: 'actionable:defined', label: 'Defined Actions', color: '#ff3845', additional: {yAxisID: 'actionable'}},
-          {view: 'actionable:resolved', label: 'Resolved Actions', color: '#37ff8b',
-            additional: {yAxisID: 'actionable'}},
-          {view: 'projects:defined', label: 'Defined Projects', color: '#fcf2a4',
-            additional: {yAxisID: 'projects', borderWidth: 2}},
-          {view: 'projects:resolved', label: 'Resolved Projects', color: '#c5cedd',
-            additional: {yAxisID: 'projects', borderWidth: 2}}
+          {view: 'actionable:defined', label: 'Defined', color: '#ff3845'},
+          {view: 'actionable:resolved', label: 'Resolved', color: '#37ff8b'}
         ],
           (queryBase) => _.assign({}, queryBase, {params})),
           scales,
@@ -217,7 +204,23 @@ export default [{
             display: true
           }
         })
-      )
+      ), ..._.map([
+        {params: { group: 'week', limit: 14}, title: 'Weekly Projects'},
+        {params: { group: 'month', limit: 12}, title: 'Monthly Projects'},
+        {params: { group: 'quarter', limit: 12}, title: 'Quarterly Projects'}],
+      ({params, title}) =>
+        ({queries: _.map([
+          {view: 'projects:defined', label: 'Defined', color: '#ff3845'},
+          {view: 'projects:resolved', label: 'Resolved', color: '#37ff8b'}
+        ],
+          (queryBase) => _.assign({}, queryBase, {params})),
+          scales,
+          title: {
+            text: title,
+            display: true
+          }
+        })
+      )]
       return {
         defined: [],
         resolved: [],
