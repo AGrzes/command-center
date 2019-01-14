@@ -103,7 +103,7 @@ function mapProgressItems(items: ProgressItem[], sortProperty: string ) {
 export default [{
   name: 'progress',
   path: 'progress',
-  component: {
+  component: Vue.extend({
     template: `
     <div class="row">
       <div class="col-12 col-md-8 col-lg-6 mb-4">
@@ -149,11 +149,10 @@ export default [{
       </div>
     </div>
     `,
-    data(): {
+    data(this: any): {
       defined: ProgressItem[],
       resolved: ProgressItem[],
-      chartConfigs: ChartSettings[],
-      ws: WebSocket
+      chartConfigs: ChartSettings[]
     } {
       const scales: ChartScales = {
         xAxes: [{
@@ -206,14 +205,11 @@ export default [{
           }
         })
       )]
-      const ws = new WebSocket(`ws://${window.location.host}/api/progress/updates`)
-      ws.addEventListener('message', _.debounce(() => this.fetch(), 1000))
       this.fetch()
       return {
         defined: [],
         resolved: [],
-        chartConfigs,
-        ws
+        chartConfigs
       }
     },
     methods: {
@@ -228,6 +224,17 @@ export default [{
           this.resolved = mapProgressItems(entries, 'resolved')
         })
       }
+    },
+    created(this: {ws?: WebSocket, fetch: () => void} & Vue) {
+      const ws = new WebSocket(`ws://${window.location.host}/api/progress/updates`)
+      ws.addEventListener('message', _.debounce(() => this.$root.$emit('changed:progress'), 1000))
+      this.$root.$on('changed:progress', this.fetch)
+    },
+    beforeDestroy(this: {ws?: WebSocket, fetch: () => void} & Vue) {
+      if (this.ws) {
+        this.ws.close()
+      }
+      this.$root.$off('changed:progress', this.fetch)
     }
-  }
+  })
 }]
