@@ -58,22 +58,32 @@ Vue.component('progress-chart', {
     }
   },
   mounted() {
-    _(this.queries).forEach((query: Query) => axios.get(`/api/progress/${query.view}`, {params: query.params})
-      .then((response) => response.data).then((data) => this.chartData = {
-          datasets: [...this.chartData.datasets, {
-          label: query.label || query.view,
-          cubicInterpolationMode: 'monotone',
-          fill: false,
-          backgroundColor: query.color || nthColor(this.chartData.datasets.length),
-          borderColor: query.color || nthColor(this.chartData.datasets.length),
-          borderWidth: 5,
-          data: _(data.rows).reverse().map((row) => ({
-            x: row.key,
-            y: row.value
-          })).value(),
-          ...(query.additional || {})
-        }]
-      }))
+    this.fetch()
+  },
+  methods: {
+    fetch() {
+      Promise.all(_.map(this.queries, (query: Query) => axios.get(`/api/progress/${query.view}`, {params: query.params})
+      .then((response) => response.data).then((data) => ({
+        label: query.label || query.view,
+        cubicInterpolationMode: 'monotone',
+        fill: false,
+        backgroundColor: query.color || nthColor(this.chartData.datasets.length),
+        borderColor: query.color || nthColor(this.chartData.datasets.length),
+        borderWidth: 5,
+        data: _(data.rows).reverse().map((row) => ({
+          x: row.key,
+          y: row.value
+        })).value(),
+        ...(query.additional || {})
+      })
+    ))).then((datasets) => this.chartData = {datasets})
+    }
+  },
+  created(this: {ws?: WebSocket, fetch: () => void} & Vue) {
+    this.$root.$on('changed:progress', this.fetch)
+  },
+  beforeDestroy(this: {ws?: WebSocket, fetch: () => void} & Vue) {
+    this.$root.$off('changed:progress', this.fetch)
   }
 })
 
