@@ -149,26 +149,11 @@ export default [{
       </div>
     </div>
     `,
-    beforeRouteEnter(to, from, next) {
-      Promise.all([defined(), resolved()]).then(([definedEntries, resolvedEntries]) => {
-        next((vm) => {
-          vm.defined = mapProgressItems(definedEntries, 'defined')
-          vm.resolved = mapProgressItems(resolvedEntries, 'resolved')
-        })
-      })
-    },
-    beforeRouteUpdate(to, from, next) {
-      defined().then((progress) => {
-        this.defined = mapProgressItems(progress, 'defined')
-      })
-      resolved().then((entries) => {
-        this.defined = mapProgressItems(entries, 'resolved')
-      })
-    },
     data(): {
       defined: ProgressItem[],
       resolved: ProgressItem[],
-      chartConfigs: ChartSettings[]
+      chartConfigs: ChartSettings[],
+      ws: WebSocket
     } {
       const scales: ChartScales = {
         xAxes: [{
@@ -217,15 +202,27 @@ export default [{
           }
         })
       )
+      const ws = new WebSocket(`ws://${window.location.host}/api/progress/updates`)
+      ws.addEventListener('message', _.debounce(() => this.fetch(), 1000))
+      this.fetch()
       return {
         defined: [],
         resolved: [],
-        chartConfigs
+        chartConfigs,
+        ws
       }
     },
     methods: {
       filterLabels(labels: string[]) {
         return _.intersection(labels, ['jira', 'github'])
+      },
+      fetch() {
+        defined().then((progress) => {
+          this.defined = mapProgressItems(progress, 'defined')
+        })
+        resolved().then((entries) => {
+          this.defined = mapProgressItems(entries, 'resolved')
+        })
       }
     }
   }
