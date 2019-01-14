@@ -225,7 +225,7 @@ export default [{
           this.defined = mapProgressItems(progress, 'defined')
         })
         resolved().then((entries) => {
-          this.defined = mapProgressItems(entries, 'resolved')
+          this.resolved = mapProgressItems(entries, 'resolved')
         })
       }
     }
