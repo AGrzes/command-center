@@ -1,8 +1,19 @@
 import {Router} from 'express'
+import addWsMethod from 'express-ws/lib/add-ws-method'
 import * as _ from 'lodash'
 import * as moment from 'moment'
 import {progress as progressDB} from './db'
 export const router = Router()
+addWsMethod(router)
+
+router.ws('/updates', (ws, req) => {
+  const changes = progressDB.changes({since: 'now', live: true})
+    .on('change', (change) => ws.send(JSON.stringify(change)))
+    .on('complete', () => ws.close(1000))
+    .on('error', (error) => ws.close(1011, JSON.stringify(error)))
+  ws.on('close', () => changes.cancel())
+  ws.on('error', () => changes.cancel())
+})
 
 router.get('/', (req, res, next) => {
   progressDB.allDocs({include_docs: true, limit: 100})

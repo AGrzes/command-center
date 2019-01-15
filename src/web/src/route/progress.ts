@@ -58,22 +58,32 @@ Vue.component('progress-chart', {
     }
   },
   mounted() {
-    _(this.queries).forEach((query: Query) => axios.get(`/api/progress/${query.view}`, {params: query.params})
-      .then((response) => response.data).then((data) => this.chartData = {
-          datasets: [...this.chartData.datasets, {
-          label: query.label || query.view,
-          cubicInterpolationMode: 'monotone',
-          fill: false,
-          backgroundColor: query.color || nthColor(this.chartData.datasets.length),
-          borderColor: query.color || nthColor(this.chartData.datasets.length),
-          borderWidth: 5,
-          data: _(data.rows).reverse().map((row) => ({
-            x: row.key,
-            y: row.value
-          })).value(),
-          ...(query.additional || {})
-        }]
-      }))
+    this.fetch()
+  },
+  methods: {
+    fetch() {
+      Promise.all(_.map(this.queries, (query: Query) => axios.get(`/api/progress/${query.view}`, {params: query.params})
+      .then((response) => response.data).then((data) => ({
+        label: query.label || query.view,
+        cubicInterpolationMode: 'monotone',
+        fill: false,
+        backgroundColor: query.color || nthColor(this.chartData.datasets.length),
+        borderColor: query.color || nthColor(this.chartData.datasets.length),
+        borderWidth: 5,
+        data: _(data.rows).reverse().map((row) => ({
+          x: row.key,
+          y: row.value
+        })).value(),
+        ...(query.additional || {})
+      })
+    ))).then((datasets) => this.chartData = {datasets})
+    }
+  },
+  created(this: {ws?: WebSocket, fetch: () => void} & Vue) {
+    this.$root.$on('changed:progress', this.fetch)
+  },
+  beforeDestroy(this: {ws?: WebSocket, fetch: () => void} & Vue) {
+    this.$root.$off('changed:progress', this.fetch)
   }
 })
 
@@ -103,7 +113,7 @@ function mapProgressItems(items: ProgressItem[], sortProperty: string ) {
 export default [{
   name: 'progress',
   path: 'progress',
-  component: {
+  component: Vue.extend({
     template: `
     <div class="row">
       <div class="col-12 col-md-8 col-lg-6 mb-4">
@@ -149,23 +159,7 @@ export default [{
       </div>
     </div>
     `,
-    beforeRouteEnter(to, from, next) {
-      Promise.all([defined(), resolved()]).then(([definedEntries, resolvedEntries]) => {
-        next((vm) => {
-          vm.defined = mapProgressItems(definedEntries, 'defined')
-          vm.resolved = mapProgressItems(resolvedEntries, 'resolved')
-        })
-      })
-    },
-    beforeRouteUpdate(to, from, next) {
-      defined().then((progress) => {
-        this.defined = mapProgressItems(progress, 'defined')
-      })
-      resolved().then((entries) => {
-        this.defined = mapProgressItems(entries, 'resolved')
-      })
-    },
-    data(): {
+    data(this: any): {
       defined: ProgressItem[],
       resolved: ProgressItem[],
       chartConfigs: ChartSettings[]
@@ -221,6 +215,7 @@ export default [{
           }
         })
       )]
+      this.fetch()
       return {
         defined: [],
         resolved: [],
@@ -230,7 +225,26 @@ export default [{
     methods: {
       filterLabels(labels: string[]) {
         return _.intersection(labels, ['jira', 'github'])
+      },
+      fetch() {
+        defined().then((progress) => {
+          this.defined = mapProgressItems(progress, 'defined')
+        })
+        resolved().then((entries) => {
+          this.resolved = mapProgressItems(entries, 'resolved')
+        })
       }
+    },
+    created(this: {ws?: WebSocket, fetch: () => void} & Vue) {
+      const ws = new WebSocket(`ws://${window.location.host}/api/progress/updates`)
+      ws.addEventListener('message', _.debounce(() => this.$root.$emit('changed:progress'), 1000))
+      this.$root.$on('changed:progress', this.fetch)
+    },
+    beforeDestroy(this: {ws?: WebSocket, fetch: () => void} & Vue) {
+      if (this.ws) {
+        this.ws.close()
+      }
+      this.$root.$off('changed:progress', this.fetch)
     }
-  }
+  })
 }]
