@@ -236,7 +236,8 @@ export default [{
       }
     },
     created(this: {ws?: WebSocket, fetch: () => void} & Vue) {
-      const ws = new WebSocket(`ws://${window.location.host}/api/progress/updates`)
+      const scheme = window.location.protocol === 'https:' ? 'wss' : 'ws'
+      const ws = new WebSocket(`${scheme}://${window.location.host}/api/progress/updates`)
       ws.addEventListener('message', _.debounce(() => this.$root.$emit('changed:progress'), 1000))
       this.$root.$on('changed:progress', this.fetch)
     },
