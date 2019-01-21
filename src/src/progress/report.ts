@@ -6,8 +6,8 @@ import {progressGoalReport} from '../db'
 export const router = Router()
 addWsMethod(router)
 
-type Activity = 'run' | 'pool' | 'crunches' | 'bike'
-type Unit = 'session' | 'm' | 'km'
+type Activity = 'run' | 'pool' | 'crunches' | 'bike' | string
+type Unit = 'session' | 'm' | 'km' | string
 interface Goal {
   activity: Activity
   startDate: string
