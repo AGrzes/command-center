@@ -2,7 +2,7 @@ import {Router} from 'express'
 import addWsMethod from 'express-ws/lib/add-ws-method'
 import * as _ from 'lodash'
 import * as moment from 'moment'
-import {exerciseGoalReport} from '../db'
+import {progressGoalReport} from '../db'
 export const router = Router()
 addWsMethod(router)
 
@@ -29,7 +29,7 @@ interface GoalReport extends Goal {
 }
 
 router.ws('/updates', (ws, req) => {
-  const changes = exerciseGoalReport.changes({since: 'now', live: true})
+  const changes = progressGoalReport.changes({since: 'now', live: true})
     .on('change', (change) => ws.send(JSON.stringify(change)))
     .on('complete', () => ws.close(1000))
     .on('error', (error) => ws.close(1011, JSON.stringify(error)))
@@ -38,7 +38,7 @@ router.ws('/updates', (ws, req) => {
 })
 
 router.get('/', (req, res) => {
-  exerciseGoalReport.allDocs<GoalReport>({include_docs: true}).then((response) => {
+  progressGoalReport.allDocs<GoalReport>({include_docs: true}).then((response) => {
     res.send(_.map(response.rows, (report) => {
       const startDate = moment(report.doc.startDate)
       const dueDate = moment(report.doc.dueDate)

@@ -35,4 +35,4 @@ of (progressQueries).pipe(progressOuch.merge(updateVersion)).subscribe({
     log('Error initializing views: %O', e)
   }})
 
-export const exerciseGoalReport = new PouchDB<ProgressItem>('http://couchdb:5984/exercise-goal-report')
+export const progressGoalReport = new PouchDB<ProgressItem>('http://couchdb:5984/progress-goal-report')

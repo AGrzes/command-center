@@ -3,13 +3,13 @@ import * as express from 'express'
 import * as expressWs from 'express-ws'
 import {router as goals} from './goals'
 import {router as progress} from './progress'
-import {router as exercise} from './progress/exercise'
+import {router as progressReport} from './progress/report'
 import {router as reminders} from './reminders'
 const app = express()
 expressWs(app)
 app.use('/api/goals', goals)
 app.use('/api/reminders', reminders)
-app.use('/api/progress/exercise', exercise)
+app.use('/api/progress-report', progressReport)
 app.use('/api/progress', progress)
 app.use(history())
 app.use(express.static('www'))
