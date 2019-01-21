@@ -118,7 +118,7 @@ export default [{
     <div class="row">
       <div class="col-12 col-md-8 col-lg-6 mb-4">
         <div class="row">
-          <exercise-card></exercise-card>
+          <progress-report-card></progress-report-card>
           <div class="col-12 col-xl-6 mb-4" v-for="chartConfig in chartConfigs">
             <div class="card">
               <div class="card-body">

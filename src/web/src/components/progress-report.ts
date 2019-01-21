@@ -27,10 +27,10 @@ interface GoalReport extends Goal {
 }
 
 function fetch(): Promise<GoalReport[]> {
-  return axios.get('/api/progress/exercise').then((response) => response.data)
+  return axios.get('/api/progress-report').then((response) => response.data)
 }
 
-Vue.component('small-exercise-widget', {
+Vue.component('small-progress-report-widget', {
   props: ['report'],
   template: `
 <div class="mb-2">
@@ -80,7 +80,7 @@ Vue.component('small-exercise-widget', {
 
   }
 })
-Vue.component('big-exercise-widget-chart', {
+Vue.component('big-progress-report-widget-chart', {
   extends: Line,
   mixins: [mixins.reactiveProp],
   props: ['title'],
@@ -111,13 +111,13 @@ Vue.component('big-exercise-widget-chart', {
   }
 })
 
-Vue.component('big-exercise-widget', {
+Vue.component('big-progress-report-widget', {
   props: ['report'],
   template: `
 <div class="mb-2">
   <div class="row">
     <div class="col-12">
-      <big-exercise-widget-chart :chartData="chartData" :title="label"></big-exercise-widget-chart>
+      <big-progress-report-widget-chart :chartData="chartData" :title="label"></big-progress-report-widget-chart>
     </div>
   </div>
   <div class="row">
@@ -198,12 +198,12 @@ Vue.component('big-exercise-widget', {
   }
 })
 
-Vue.component('exercise-card', {
+Vue.component('progress-report-card', {
   template: `
 <div class="col-12 mb-4" :class="{'col-xl-12':expanded, 'col-xl-6':!expanded}">
   <div class="card">
     <div class="card-body">
-      <exercise-widget @expand="expand" @collapse="collapse"></exercise-widget>
+      <progress-report-widget @expand="expand" @collapse="collapse"></progress-report-widget>
     </div>
   </div>
 </div>
@@ -223,7 +223,7 @@ Vue.component('exercise-card', {
   }
 })
 
-Vue.component('exercise-widget', {
+Vue.component('progress-report-widget', {
   template: `
 <div>
   <div class="row">
@@ -256,7 +256,7 @@ Vue.component('exercise-widget', {
     </div>
     <div class="row" v-if="tab==='current'">
       <div class="col-12 col-md-6" v-for="report in current" :key="report._id + '-big'">
-        <big-exercise-widget :report="report"></big-exercise-widget>
+        <big-progress-report-widget :report="report"></big-progress-report-widget>
       </div>
     </div>
     <div class="row" v-if="tab==='archived'">
@@ -270,7 +270,7 @@ Vue.component('exercise-widget', {
             </button>
           </div>
           <div class="modal-body">
-            <big-exercise-widget :report="reportToShow" v-if="reportToShow"></big-exercise-widget>
+            <big-progress-report-widget :report="reportToShow" v-if="reportToShow"></big-progress-report-widget>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -328,7 +328,7 @@ Vue.component('exercise-widget', {
   </div>
   <div class="row" v-else>
     <div class="col-12" v-for="report in current" :key="report._id + '-small'">
-      <small-exercise-widget :report="report"></small-exercise-widget>
+      <small-progress-report-widget :report="report"></small-progress-report-widget>
     </div>
   </div>
 </div>
@@ -371,14 +371,14 @@ Vue.component('exercise-widget', {
   },
   created(this: {ws?: WebSocket, fetch: () => void} & Vue) {
     const scheme = window.location.protocol === 'https:' ? 'wss' : 'ws'
-    const ws = new WebSocket(`${scheme}://${window.location.host}/api/progress/exercise/updates`)
-    ws.addEventListener('message', _.debounce(() => this.$root.$emit('changed:progress:exercise'), 1000))
-    this.$root.$on('changed:progress:exercise', this.fetch)
+    const ws = new WebSocket(`${scheme}://${window.location.host}/api/progress-report/updates`)
+    ws.addEventListener('message', _.debounce(() => this.$root.$emit('changed:progress:report'), 1000))
+    this.$root.$on('changed:progress:report', this.fetch)
   },
   beforeDestroy(this: {ws?: WebSocket, fetch: () => void} & Vue) {
     if (this.ws) {
       this.ws.close()
     }
-    this.$root.$off('changed:progress:exercise', this.fetch)
+    this.$root.$off('changed:progress:report', this.fetch)
   }
 })
