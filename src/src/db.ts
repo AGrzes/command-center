@@ -5,6 +5,7 @@ import * as PouchDBMapReduce from 'pouchdb-mapreduce'
 import {of} from 'rxjs'
 import { ProgressItem } from './model/progress'
 import { Reminder } from './model/reminders'
+import progressGoalReportQueries from './view/progress-goal-report'
 import progressQueries from './view/progress-queries'
 const log = debug('command-center:db')
 PouchDB.plugin(PouchDBMapReduce)
@@ -35,6 +36,13 @@ of (progressQueries).pipe(progressOuch.merge(updateVersion)).subscribe({
     log('Error initializing views: %O', e)
   }})
 
-export const progressGoalReport = new PouchDB<ProgressItem>('http://couchdb:5984/progress-goal-report')
-
+export const progressGoalReport = new PouchDB<GoalReport>('http://couchdb:5984/progress-goal-report')
+const progressGoalReportOuch = new Ouch(progressGoalReport)
+of (progressGoalReportQueries).pipe(progressGoalReportOuch.merge(updateVersion)).subscribe({
+  complete() {
+    log('views initialized')
+  },
+  error(e) {
+    log('Error initializing views: %O', e)
+  }})
 export const config = new PouchDB<any>('http://couchdb:5984/command-center-config')
