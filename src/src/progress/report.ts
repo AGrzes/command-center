@@ -16,14 +16,6 @@ router.ws('/updates', (ws, req) => {
   ws.on('error', () => changes.cancel())
 })
 
-interface ProgressReportsConfig {
-  reports: Array<{
-    id: string
-    name: string
-    activities: string[]
-  }>
-}
-
 router.get('/:reportId', (req, res) => {
   config('progress-reports').then((prc: ProgressReportsConfig) => {
     const reportConfig = _.find(prc.reports, (r) => r.id === req.params.reportId)

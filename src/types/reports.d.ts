@@ -19,3 +19,13 @@ interface ProgressItem {
 interface GoalReport extends Goal {
   progress: ProgressItem[]
 }
+
+interface ProgressReportConfig {
+  id: string
+  title: string
+  activities: string[]
+}
+
+interface ProgressReportsConfig {
+  reports: ProgressReportConfig[]
+}
