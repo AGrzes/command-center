@@ -1,6 +1,7 @@
 import * as history from 'connect-history-api-fallback'
 import * as express from 'express'
 import * as expressWs from 'express-ws'
+import {router as config} from './api/config'
 import {router as goals} from './goals'
 import {router as progress} from './progress'
 import {router as progressReport} from './progress/report'
@@ -11,6 +12,7 @@ app.use('/api/goals', goals)
 app.use('/api/reminders', reminders)
 app.use('/api/progress-report', progressReport)
 app.use('/api/progress', progress)
+app.use('/api/config', config)
 app.use(history())
 app.use(express.static('www'))
 app.use(express.static('web/generated'))
