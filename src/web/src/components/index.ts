@@ -1,1 +1,1 @@
-import './exercise'
+import './progress-report'

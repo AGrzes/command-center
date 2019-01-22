@@ -118,7 +118,8 @@ export default [{
     <div class="row">
       <div class="col-12 col-md-8 col-lg-6 mb-4">
         <div class="row">
-          <exercise-card></exercise-card>
+          <progress-report-card v-for="reportConfig in progressReportsConfig.reports" :config="reportConfig">
+          </progress-report-card>
           <div class="col-12 col-xl-6 mb-4" v-for="chartConfig in chartConfigs">
             <div class="card">
               <div class="card-body">
@@ -159,11 +160,7 @@ export default [{
       </div>
     </div>
     `,
-    data(this: any): {
-      defined: ProgressItem[],
-      resolved: ProgressItem[],
-      chartConfigs: ChartSettings[]
-    } {
+    data(this: any) {
       const scales: ChartScales = {
         xAxes: [{
           type: 'time',
@@ -216,10 +213,12 @@ export default [{
         })
       )]
       this.fetch()
+      const progressReportsConfig: ProgressReportsConfig = {reports: []}
       return {
         defined: [],
         resolved: [],
-        chartConfigs
+        chartConfigs,
+        progressReportsConfig
       }
     },
     methods: {
@@ -234,6 +233,9 @@ export default [{
           this.resolved = mapProgressItems(entries, 'resolved')
         })
       }
+    },
+    mounted() {
+      axios.get(`/api/config/progress-reports`).then(({data}) => this.progressReportsConfig = data)
     },
     created(this: {ws?: WebSocket, fetch: () => void} & Vue) {
       const scheme = window.location.protocol === 'https:' ? 'wss' : 'ws'
