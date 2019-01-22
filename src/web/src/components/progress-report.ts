@@ -5,7 +5,7 @@ import Vue from 'vue'
 import { Line, mixins } from 'vue-chartjs'
 
 function fetch(): Promise<GoalReport[]> {
-  return axios.get('/api/progress-report').then((response) => response.data)
+  return axios.get('/api/progress-report/exercise').then((response) => response.data)
 }
 
 Vue.component('small-progress-report-widget', {
