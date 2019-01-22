@@ -6,28 +6,6 @@ import {progressGoalReport} from '../db'
 export const router = Router()
 addWsMethod(router)
 
-type Activity = 'run' | 'pool' | 'crunches' | 'bike' | string
-type Unit = 'session' | 'm' | 'km' | string
-interface Goal {
-  activity: Activity
-  startDate: string
-  dueDate: string
-  target: number
-  unit?: Unit
-  archived: boolean
-  meet?: boolean
-}
-
-interface ProgressItem {
-  date: string
-  increment: number
-  total: number
-}
-
-interface GoalReport extends Goal {
-  progress: ProgressItem[]
-}
-
 router.ws('/updates', (ws, req) => {
   const changes = progressGoalReport.changes({since: 'now', live: true})
     .on('change', (change) => ws.send(JSON.stringify(change)))
