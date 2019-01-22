@@ -36,3 +36,5 @@ of (progressQueries).pipe(progressOuch.merge(updateVersion)).subscribe({
   }})
 
 export const progressGoalReport = new PouchDB<ProgressItem>('http://couchdb:5984/progress-goal-report')
+
+export const config = new PouchDB<any>('http://couchdb:5984/command-center-config')
