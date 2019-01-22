@@ -4,8 +4,8 @@ import moment = require('moment')
 import Vue from 'vue'
 import { Line, mixins } from 'vue-chartjs'
 
-function fetch(): Promise<GoalReport[]> {
-  return axios.get('/api/progress-report/exercise').then((response) => response.data)
+function fetch(id: string): Promise<GoalReport[]> {
+  return axios.get(`/api/progress-report/${id}`).then((response) => response.data)
 }
 
 Vue.component('small-progress-report-widget', {
@@ -177,11 +177,12 @@ Vue.component('big-progress-report-widget', {
 })
 
 Vue.component('progress-report-card', {
+  props: ['config'],
   template: `
 <div class="col-12 mb-4" :class="{'col-xl-12':expanded, 'col-xl-6':!expanded}">
   <div class="card">
     <div class="card-body">
-      <progress-report-widget @expand="expand" @collapse="collapse"></progress-report-widget>
+      <progress-report-widget @expand="expand" @collapse="collapse" :config="config"></progress-report-widget>
     </div>
   </div>
 </div>
@@ -202,10 +203,11 @@ Vue.component('progress-report-card', {
 })
 
 Vue.component('progress-report-widget', {
+  props: ['config'],
   template: `
-<div>
+<div v-if="config">
   <div class="row">
-    <h3 class="col-4 offset-4 text-center">Exercise
+    <h3 class="col-4 offset-4 text-center">{{config.title}}
     </h3>
     <div class="col-4 text-right">
       <button type="button" @click="toggle()" class="btn btn-light">
@@ -325,7 +327,7 @@ Vue.component('progress-report-widget', {
       $(this.$refs.detailsModal).modal()
     },
     fetch() {
-      fetch().then((reports) => {
+      fetch(this.config.id).then((reports) => {
         const now = moment()
         this.current = _.filter(reports, (report: GoalReport) => !report.archived
           && now.isSameOrAfter(report.startDate))
