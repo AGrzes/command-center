@@ -206,11 +206,11 @@ Vue.component('progress-report-widget', {
   props: ['config'],
   template: `
 <div v-if="config">
-  <div class="row">
-    <h3 class="col-4 offset-4 text-center">{{config.title}}
+  <div class="d-flex">
+    <h3 class="flex-grow-1 text-center">{{config.title}}
     </h3>
-    <div class="col-4 text-right">
-      <button type="button" @click="toggle()" class="btn btn-light">
+    <div class="text-right">
+      <button type="button" @click="toggle()" class="btn btn-outline-dark">
         <template v-if="expanded">
           <i class="fas fa-minus-square"></i>
         </template>
