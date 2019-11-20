@@ -5,6 +5,7 @@ import moment = require('moment')
 import Vue from 'vue'
 import { Line, mixins } from 'vue-chartjs'
 import { ProgressItem } from '../model/progress'
+import { WS } from '../util/ws'
 interface Query {
   view: string
   label?: string
@@ -79,10 +80,10 @@ Vue.component('progress-chart', {
     ))).then((datasets) => this.chartData = {datasets})
     }
   },
-  created(this: {ws?: WebSocket, fetch: () => void} & Vue) {
+  created() {
     this.$root.$on('changed:progress', this.fetch)
   },
-  beforeDestroy(this: {ws?: WebSocket, fetch: () => void} & Vue) {
+  beforeDestroy() {
     this.$root.$off('changed:progress', this.fetch)
   }
 })
@@ -134,7 +135,10 @@ export default [{
         <div class="row">
           <div class="col-12 col-xl-6">
             <ul class="list-group">
-            <li class="list-group-item py-1 list-group-item-primary" ><h3>Resolved</h3></li>
+            <li class="list-group-item py-1 list-group-item-primary" ><h3>
+              <span class="spinner-grow-sm align-middle" :class="{'spinner-grow':connected}"></span>
+              Resolved
+            </h3></li>
               <template v-for="(entries,day) in resolved">
                 <li class="list-group-item py-1 list-group-item-info" ><strong>{{day}}</strong></li>
                 <li class="list-group-item py-1" v-for="entry in entries">
@@ -146,7 +150,10 @@ export default [{
           </div>
           <div class="col-12 col-xl-6">
             <ul class="list-group">
-              <li class="list-group-item py-1 list-group-item-primary" ><h3>Defined</h3></li>
+              <li class="list-group-item py-1 list-group-item-primary" ><h3>
+                <span class="spinner-grow-sm align-middle" :class="{'spinner-grow':connected}"></span>
+                Defined
+              </h3></li>
               <template v-for="(entries,day) in defined">
                 <li class="list-group-item py-1 list-group-item-info" ><strong>{{day}}</strong></li>
                 <li class="list-group-item py-1" v-for="entry in entries">
@@ -218,7 +225,9 @@ export default [{
         defined: [],
         resolved: [],
         chartConfigs,
-        progressReportsConfig
+        progressReportsConfig,
+        ws: new WS({path: 'api/progress/updates'}),
+        connected: false
       }
     },
     methods: {
@@ -237,16 +246,14 @@ export default [{
     mounted() {
       axios.get(`/api/config/progress-reports`).then(({data}) => this.progressReportsConfig = data)
     },
-    created(this: {ws?: WebSocket, fetch: () => void} & Vue) {
-      const scheme = window.location.protocol === 'https:' ? 'wss' : 'ws'
-      const ws = new WebSocket(`${scheme}://${window.location.host}/api/progress/updates`)
-      ws.addEventListener('message', _.debounce(() => this.$root.$emit('changed:progress'), 1000))
+    created() {
+      this.ws.connect()
+      this.ws.message.subscribe(_.debounce(() => this.$root.$emit('changed:progress'), 1000))
+      this.ws.connected.subscribe((connected): boolean => this.connected = connected)
       this.$root.$on('changed:progress', this.fetch)
     },
-    beforeDestroy(this: {ws?: WebSocket, fetch: () => void} & Vue) {
-      if (this.ws) {
-        this.ws.close()
-      }
+    beforeDestroy() {
+      this.ws.close()
       this.$root.$off('changed:progress', this.fetch)
     }
   })
