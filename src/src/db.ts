@@ -1,6 +1,7 @@
 import * as debug from 'debug'
 import {Ouch} from 'ouch-rx'
-import * as PouchDB from 'pouchdb-http'
+import * as PouchDBAdapterHttp from 'pouchdb-adapter-http'
+import * as PouchDB from 'pouchdb-core'
 import * as PouchDBMapReduce from 'pouchdb-mapreduce'
 import {of} from 'rxjs'
 import { ProgressItem } from './model/progress'
@@ -8,7 +9,7 @@ import { Reminder } from './model/reminders'
 import progressGoalReportQueries from './view/progress-goal-report'
 import progressQueries from './view/progress-queries'
 const log = debug('command-center:db')
-PouchDB.plugin(PouchDBMapReduce)
+PouchDB.plugin(PouchDBAdapterHttp).plugin(PouchDBMapReduce)
 function updateVersion<T extends object>(newDoc: T & {version: string},
                                          oldDoc?: T & {version: string} & {_rev: string}): any {
   if (oldDoc) {
