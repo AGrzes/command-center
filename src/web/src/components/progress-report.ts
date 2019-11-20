@@ -1,6 +1,7 @@
 import axios from 'axios'
 import * as _ from 'lodash'
 import moment = require('moment')
+import { connect } from 'net'
 import Vue from 'vue'
 import { Line, mixins } from 'vue-chartjs'
 
@@ -207,7 +208,9 @@ Vue.component('progress-report-widget', {
   template: `
 <div v-if="config">
   <div class="d-flex">
-    <h3 class="flex-grow-1 text-center">{{config.title}}
+    <h3 class="flex-grow-1 text-center">
+      <span class="spinner-grow-sm align-middle" :class="{'spinner-grow':connected}"></span>
+      {{config.title}}
     </h3>
     <div class="text-right">
       <button type="button" @click="toggle()" class="btn btn-outline-dark">
@@ -334,6 +337,31 @@ Vue.component('progress-report-widget', {
         this.archived = _.filter(reports, (report: GoalReport) => report.archived)
         this.future = _.filter(reports, (report: GoalReport) => !report.archived && now.isBefore(report.startDate))
       })
+    },
+    connect() {
+      if (this.ws) {
+        this.ws.close()
+      }
+      const scheme = window.location.protocol === 'https:' ? 'wss' : 'ws'
+      this.ws = new WebSocket(`${scheme}://${window.location.host}/api/progress-report/updates`)
+      this.ws.addEventListener('message', _.debounce(() => this.$root.$emit('changed:progress:report'), 1000))
+      this.ws.addEventListener('open', (event) => {
+        console.log(event)
+        this.backoff = 100
+        this.connected = true
+      })
+      const retry = (event) => {
+        if (event.code !== 1000) {
+          console.log(event)
+          this.connected = false
+          setTimeout(() => {
+            this.connect()
+          }, this.backoff)
+          this.backoff *= 2
+        }
+      }
+      this.ws.addEventListener('error', console.error)
+      this.ws.addEventListener('close', retry)
     }
   },
   data() {
@@ -343,16 +371,17 @@ Vue.component('progress-report-widget', {
       archived: [] as GoalReport[],
       expanded: false,
       tab: 'current',
-      reportToShow: null
+      reportToShow: null,
+      ws: null,
+      connected: false,
+      backoff: 100
     }
   },
   mounted() {
     this.fetch()
   },
-  created(this: {ws?: WebSocket, fetch: () => void} & Vue) {
-    const scheme = window.location.protocol === 'https:' ? 'wss' : 'ws'
-    const ws = new WebSocket(`${scheme}://${window.location.host}/api/progress-report/updates`)
-    ws.addEventListener('message', _.debounce(() => this.$root.$emit('changed:progress:report'), 1000))
+  created() {
+    this.connect()
     this.$root.$on('changed:progress:report', this.fetch)
   },
   beforeDestroy(this: {ws?: WebSocket, fetch: () => void} & Vue) {
