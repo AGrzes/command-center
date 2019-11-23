@@ -356,6 +356,7 @@ Vue.component('progress-report-widget', {
       ws = new WS({path: 'api/progress-report/updates'})
       ws.connect()
       ws.message.subscribe(_.debounce(() => this.$root.$emit('changed:progress:report'), 1000))
+      ws.connected.subscribe(() => this.$root.$emit('changed:progress:report'))
     }
     ws.connected.subscribe((connected): boolean => this.connected = connected)
     this.fetch()
