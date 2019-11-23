@@ -10,7 +10,7 @@ interface WSOptions {
 export class WS {
   private url: string
   private socket?: WebSocket
-  private message: Subject<any>
+  public message: Subject<any>
   private backoff: number = 100
   public opened: Subject<Event>
   public closed: Subject<CloseEvent>
