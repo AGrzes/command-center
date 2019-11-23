@@ -249,7 +249,8 @@ export default [{
     created() {
       this.ws.connect()
       this.ws.message.subscribe(_.debounce(() => this.$root.$emit('changed:progress'), 1000))
-      this.ws.connected.subscribe((connected): boolean => this.connected = connected)
+      this.ws.connected.subscribe((connected: boolean) => this.connected = connected)
+      this.ws.connected.subscribe(() => this.$root.$emit('changed:progress'))
       this.$root.$on('changed:progress', this.fetch)
     },
     beforeDestroy() {

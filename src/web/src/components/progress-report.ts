@@ -203,6 +203,7 @@ Vue.component('progress-report-card', {
   }
 })
 
+let ws: WS
 Vue.component('progress-report-widget', {
   props: ['config'],
   template: `
@@ -347,21 +348,23 @@ Vue.component('progress-report-widget', {
       expanded: false,
       tab: 'current',
       reportToShow: null,
-      ws: new WS({path: 'api/progress-report/updates'}),
       connected: false
     }
   },
   mounted() {
-    this.ws.connect()
-    this.ws.message.subscribe(_.debounce(() => this.$root.$emit('changed:progress:report'), 1000))
-    this.ws.connected.subscribe((connected): boolean => this.connected = connected)
+    if (!ws) {
+      ws = new WS({path: 'api/progress-report/updates'})
+      ws.connect()
+      ws.message.subscribe(_.debounce(() => this.$root.$emit('changed:progress:report'), 1000))
+      ws.connected.subscribe(() => this.$root.$emit('changed:progress:report'))
+    }
+    ws.connected.subscribe((connected): boolean => this.connected = connected)
     this.fetch()
   },
   created() {
     this.$root.$on('changed:progress:report', this.fetch)
   },
   beforeDestroy() {
-    this.ws.close()
     this.$root.$off('changed:progress:report', this.fetch)
   }
 })
