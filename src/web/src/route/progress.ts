@@ -142,7 +142,8 @@ export default [{
               <template v-for="(entries,day) in resolved">
                 <li class="list-group-item py-1 list-group-item-info" ><strong>{{day}}</strong></li>
                 <li class="list-group-item py-1" v-for="entry in entries">
-                  <span class="badge badge-primary mr-1" v-for="label in filterLabels(entry.labels)">{{label}}</span>
+                  <span class="badge badge-primary mr-1" v-for="source in selectSource(entry.labels)">{{source}}</span>
+                  <span class="badge badge-warning mr-1" v-for="type in selectType(entry.labels)">{{type}}</span>
                   {{entry.summary}} <small v-if="entry.parent">{{entry.parent}}</small>
                 </li>
               </template>
@@ -157,7 +158,8 @@ export default [{
               <template v-for="(entries,day) in defined">
                 <li class="list-group-item py-1 list-group-item-info" ><strong>{{day}}</strong></li>
                 <li class="list-group-item py-1" v-for="entry in entries">
-                  <span class="badge badge-primary mr-1" v-for="label in filterLabels(entry.labels)">{{label}}</span>
+                  <span class="badge badge-primary mr-1" v-for="source in selectSource(entry.labels)">{{source}}</span>
+                  <span class="badge badge-warning mr-1" v-for="type in selectType(entry.labels)">{{type}}</span>
                   {{entry.summary}} <small v-if="entry.parent">{{entry.parent}}</small>
                 </li>
               </template>
@@ -231,8 +233,11 @@ export default [{
       }
     },
     methods: {
-      filterLabels(labels: string[]) {
+      selectSource(labels: string[]) {
         return _.intersection(labels, ['jira', 'github'])
+      },
+      selectType(labels: string[]) {
+        return _.intersection(labels, ['Action', 'Project', 'Thread', 'Condition', 'Thing', 'Activity', 'Group'])
       },
       fetch() {
         defined().then((progress) => {
