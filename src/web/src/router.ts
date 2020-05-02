@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import goals from './route/goals'
 import progress from './route/progress'
+import reference from './route/reference'
 import reminders from './route/reminders'
 Vue.use(VueRouter)
 const routes = [{
@@ -48,5 +49,7 @@ const router = new VueRouter({
   routes,
   linkActiveClass: 'active'
 })
+
+reference()
 
 export default router
