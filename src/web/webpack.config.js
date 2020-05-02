@@ -8,6 +8,7 @@ module.exports = {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'generated')
   },
+  devtool: 'source-map',
   module: {
     rules: [{
       test: /\.css$/,
@@ -31,8 +32,12 @@ module.exports = {
       exclude: /node_modules/,
       resolve: {
           extensions: ['.ts', '.tsx', '.wasm', '.mjs', '.js', '.json']
-      },
-  }]
+      } 
+    },{
+      test: /\.js$/,
+      use: ["source-map-loader"],
+      enforce: "pre"
+    }]
   },
   watchOptions: {
     poll: true
