@@ -11,7 +11,7 @@ let theConfig: Config
 
 export async function config(): Promise<Config> {
     if (!theConfig) {
-        theConfig = await getConfig('http:/api/config')
+        theConfig = await getConfig('http:/api/config/yellow2020')
     }
     return theConfig
 }
