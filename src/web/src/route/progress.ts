@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { ChartScales, ChartTitleOptions, TickOptions } from 'chart.js'
-import * as _ from 'lodash'
-import moment = require('moment')
+import _ from 'lodash'
+import moment from 'moment'
 import Vue from 'vue'
 import { Line, mixins } from 'vue-chartjs'
 import { ProgressItem } from '../model/progress'

@@ -1,6 +1,6 @@
-import * as PortalVue from 'portal-vue'
+import PortalVue from 'portal-vue'
 import Vue from 'vue'
-import * as VueApexCharts from 'vue-apexcharts'
+import VueApexCharts from 'vue-apexcharts'
 import './components'
 import router from './router'
 

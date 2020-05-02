@@ -1,6 +1,6 @@
 import axios from 'axios'
-import * as _ from 'lodash'
-import moment = require('moment')
+import _ from 'lodash'
+import moment from 'moment'
 import Vue from 'vue'
 import { Line, mixins } from 'vue-chartjs'
 import { WS } from '../util/ws'
