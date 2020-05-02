@@ -21,8 +21,8 @@ router.get('/', (req, res, next) => {
     .then((items) => res.send(items))
     .catch((err) => res.status(500).send(err))
 })
-type DataIn = Array<{key: string[], value: number}>
-type DataOut = Array<{key: string, value: number}>
+type DataIn = {key: string[], value: number}[]
+type DataOut = {key: string, value: number}[]
 function last(unit: moment.unitOfTime.DurationConstructor, count: number, data: DataIn): DataOut {
   const result = []
   let target = { key: moment().endOf(unit).format('YYYY-MM-DD'), value: 0}
@@ -41,7 +41,7 @@ function last(unit: moment.unitOfTime.DurationConstructor, count: number, data: 
 }
 
 router.get('/:query', (req, res) => {
-  const limit = req.query.limit || 100
+  const limit: number = Number.parseInt(req.query.limit as string) || 100
   switch (req.query.group) {
     case 'day':
     progressDB.query(`queries/${req.params.query}`, {
