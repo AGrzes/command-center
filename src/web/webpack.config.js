@@ -1,5 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
+const { DefinePlugin } = webpack;
 
 module.exports = {
   entry: './src/main.ts',
@@ -48,6 +49,9 @@ module.exports = {
       jQuery: 'jquery',
       'window.jQuery': 'jquery',
       Popper: ['popper.js', 'default']
+    }),
+    new DefinePlugin({
+      'process.env.COUCH_DB_ADDRESS': JSON.stringify(process.env.COUCH_DB_ADDRESS || 'http://couchdb.home.agrzes.pl:5984')
     })
   ],
   resolve: {

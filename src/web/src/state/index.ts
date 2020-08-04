@@ -1,12 +1,16 @@
-import { store as setupStore} from '@agrzes/yellow-2020-web-vue-state'
+import {bookModel} from '@agrzes/yellow-2020-common-books'
+import {modelState} from '@agrzes/yellow-2020-web-vue-books'
 import Vue from 'vue'
 import Vuex from 'vuex'
-import { config } from '../config'
 Vue.use(Vuex)
 
 async function store() {
-  const {state} = await config()
-  return setupStore(state)
+  await bookModel.load()
+  return new Vuex.Store({
+    modules: {
+      model: await modelState(bookModel)
+    }
+  })
 }
 
 export default store
