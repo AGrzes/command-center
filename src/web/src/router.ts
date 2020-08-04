@@ -1,11 +1,9 @@
-import { modelRoutes } from '@agrzes/yellow-2020-web-vue-router'
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import goals from './route/goals'
 import progress from './route/progress'
-import reminders from './route/reminders'
 import references from './route/references'
-import { uiModel } from './uiModel'
+import reminders from './route/reminders'
 Vue.use(VueRouter)
 async function router() {
   const routes = [{
