@@ -25,7 +25,7 @@
     "@agrzes/yellow-2020-common-ui-model": "^1.1.6",
     "@agrzes/yellow-2020-web-vue-router": "^1.1.6",
     "@agrzes/yellow-2020-web-vue-state": "^1.1.6",
-    "@agrzes/yellow-2020-web-vue-books": "^1.1.6",
+    "@agrzes/yellow-2020-web-vue-books": "^1.1.7",
     "apexcharts": "^3.19.0",
     "axios": "^0.19.2",
     "bootstrap": "^4.4.1",
