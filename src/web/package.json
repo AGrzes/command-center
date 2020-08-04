@@ -22,9 +22,10 @@
   "homepage": "https://github.com/AGrzes/command-center#readme",
   "dependencies": {
     "@agrzes/yellow-2020-common-config": "^1.1.2",
-    "@agrzes/yellow-2020-common-ui-model": "^1.1.2",
-    "@agrzes/yellow-2020-web-vue-router": "^1.1.2",
-    "@agrzes/yellow-2020-web-vue-state": "^1.1.3",
+    "@agrzes/yellow-2020-common-ui-model": "^1.1.6",
+    "@agrzes/yellow-2020-web-vue-router": "^1.1.6",
+    "@agrzes/yellow-2020-web-vue-state": "^1.1.6",
+    "@agrzes/yellow-2020-web-vue-books": "^1.1.6",
     "apexcharts": "^3.19.0",
     "axios": "^0.19.2",
     "bootstrap": "^4.4.1",
@@ -39,8 +40,8 @@
     "vue": "^2.6.11",
     "vue-apexcharts": "^1.5.3",
     "vue-chartjs": "^3.5.0",
-    "vue-router": "^3.1.6",
-    "vuex": "^3.3.0"
+    "vue-router": "^3.3.4",
+    "vuex": "^3.4.0"
   },
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^5.13.0",
